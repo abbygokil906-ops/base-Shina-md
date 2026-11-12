@@ -1,0 +1,10 @@
+{
+  "blacklistJpm": [],
+  "autoJpm": {
+    "status": false,
+    "interval": 30,
+    "type": "minute",
+    "messages": [],
+    "_lastRun": 0
+  }
+}
