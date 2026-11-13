@@ -14,14 +14,9 @@ const Lang = require("./Lang.js")
 const Brand = require("./Brand.js")
 const fs = require("fs")
 
-// kategori yang tampil: Nokos Mode ON -> user biasa cuma lihat Nokos (owner lihat Nokos + Nokos Owner + Owner)
 const visibleCategories = (info) =>
     categories.filter((c) => {
         if (c.ownerOnly && !info.isOwner) return false
-        if (info.nokosMode || info.warungMode) {
-            if (info.isOwner) return ["nokos", "nokosowner", "warung", "warungowner", "game", "rpg", "download", "owner"].includes(c.key)
-            return ((info.nokosMode || info.warungMode) && c.key === "nokos") || (info.warungMode && c.key === "warung")
-        }
         return true
     })
 

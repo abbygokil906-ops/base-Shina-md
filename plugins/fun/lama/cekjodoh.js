@@ -64,7 +64,7 @@ module.exports = {
             const parts = t.split(/\s*(?:&|\+|\bdan\b|\bx\b|\bsama\b|,)\s*/i).map((s) => s.trim()).filter(Boolean)
             if (parts.length >= 2) { a = parts[0]; b = parts[1] } else { a = me; b = parts[0] }
         }
-        if (a.toLowerCase() === b.toLowerCase()) throw new Usage("Masa sama diri sendiri? Isi dua orang yang beda ya 😅")
+        if (a.toLowerCase() === b.toLowerCase()) throw new Usage("Kocak masa sama diri sendiri? Isi dua orang yang beda lah")
         // urutan nama tidak berpengaruh: Budi & Ani == Ani & Budi
         const key = [a, b].map((s) => s.toLowerCase().replace(/\s+/g, "")).sort().join("|")
         const h = hash(key)
@@ -72,10 +72,10 @@ module.exports = {
         const tier = TIERS.find((t) => skor >= t.min)
         const umur = 17 + (hash(key + "umur") % 24)          // perkiraan umur ketemu jodoh (17-40)
         const hari = 1 + (hash(key + "hari") % 365)
-        const bagian = [["💬 Komunikasi", "k"], ["🔥 Chemistry", "c"], ["🤝 Kesetiaan", "s"], ["💸 Ekonomi", "e"]]
+        const bagian = [["Komunikasi", "k"], ["Chemistry", "c"], ["Kesetiaan", "s"], ["Ekonomi", "e"]]
             .map(([n, k]) => { const v = Math.min(100, Math.max(0, skor + (hash(key + k) % 41) - 20)); return `${n.padEnd(14)} ${bar(v)} ${v}%` })
             .join("\n")
-        const out = `*💘 CEK JODOH*\n\n${a}  ❤️  ${b}\n\n*Kecocokan: ${skor}%*\n${bar(skor)}\n\n${bagian}\n\n*${tier.judul}*\n${pick(tier.teks, h >>> 3)}\n\n_Perkiraan jadian: umur ${umur}, sekitar ${hari} hari lagi_ 😏`
+        const out = `*CEK JODOH*\n\n${a}  ❤️  ${b}\n\n*Kecocokan: ${skor}%*\n${bar(skor)}\n\n${bagian}\n\n*${tier.judul}*\n${pick(tier.teks, h >>> 3)}\n\n_Perkiraan jadian: umur ${umur}, sekitar ${hari} hari lagi_`
         await sock.sendMessage(m.chat, { text: out, mentions }, { quoted: m })
     }
 }

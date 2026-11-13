@@ -12,7 +12,7 @@ module.exports = {
         const reason = String(text || "").trim().slice(0, 150)
         Afk.setAfk(m, reason)
         await sock.sendMessage(m.chat, {
-            text: `😴 @${Afk.digits(m.sender)} sekarang *AFK* di grup ini.\n📝 Alasan: ${reason || "tanpa alasan"}\n\nKalau ada yang tag kamu, chat-nya dihapus & bot bilang kamu lagi AFK. Chat lagi di grup ini untuk berhenti AFK.`,
+            text: `@${Afk.digits(m.sender)} sekarang *AFK* di grup ini.\n📝 Alasan: ${reason || "tanpa alasan"}\n\nKalau ada yang tag kamu, chat-nya dihapus & bot bilang kamu lagi AFK. Chat lagi di grup ini untuk berhenti AFK.`,
             mentions: [m.sender]
         }, { quoted: m })
     }

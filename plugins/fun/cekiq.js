@@ -19,14 +19,14 @@ function hashString(str) {
 const getIQ = (number) => 40 + (hashString(String(number || '0')) % 141) // 40 - 180
 
 function getTitle(iq) {
-    if (iq < 50) return '🧠 Cacing Darat (Sangat Bodoh)'
-    if (iq < 70) return '🤡 Bodoh'
-    if (iq < 85) return '🥴 Di Bawah Rata-rata'
-    if (iq < 100) return '😐 Rata-rata'
-    if (iq < 115) return '🙂 Di Atas Rata-rata'
-    if (iq < 130) return '😎 Pintar'
-    if (iq < 145) return '🤓 Jenius'
-    return '👑 Jenius Luar Biasa'
+    if (iq < 50) return 'Dongo bet anj'
+    if (iq < 70) return 'SDM rendah😹'
+    if (iq < 85) return 'SDM rendah😹'
+    if (iq < 100) return 'mayan'
+    if (iq < 115) return 'SDM tinggi=Arshi'
+    if (iq < 130) return 'SDM tinggi=Arshi'
+    if (iq < 145) return 'SDM tinggi=Arshi'
+    return 'Jenius Luar Biasa'
 }
 
 function resolveTarget(m, text) {
@@ -52,11 +52,11 @@ let handler = async (m, { sock, text, reply }) => {
 
     const iq = getIQ(t.number)
     const out =
-        `🧠 *CEK IQ*\n\n` +
-        `👤 Target : ${t.name}\n` +
-        `📱 Nomor  : ${t.number}\n` +
-        `📊 IQ     : *${iq}*\n` +
-        `🏷️ Title  : ${getTitle(iq)}`
+        `*CEK IQ*\n\n` +
+        `Target : ${t.name}\n` +
+        `Nomor  : ${t.number}\n` +
+        `IQ     : *${iq}*\n` +
+        `Title  : ${getTitle(iq)}`
 
     return sock.sendMessage(m.chat, { text: out, mentions: t.mentions }, { quoted: m })
 }

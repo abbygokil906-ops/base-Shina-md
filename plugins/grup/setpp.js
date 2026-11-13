@@ -15,14 +15,14 @@ module.exports = {
         if (command === "setppgc") {
             needAdmin(m, isOwner); needBotAdmin(m)
             await sock.updateProfilePicture(m.chat, media.buffer)
-            return m.reply("✅ Foto profil grup diganti.")
+            return m.reply("Foto profil grup diganti.")
         }
 
         if (!isOwner) throw new Usage(global.mess?.owner || "Fitur ini hanya untuk ownerbot.")
 
         if (command === "setppbot") {
             await sock.updateProfilePicture(sock.user.id, media.buffer)
-            return m.reply("✅ Foto profil bot diganti.")
+            return m.reply("Foto profil bot diganti.")
         }
 
         // setppch: butuh id saluran (xxx@newsletter) atau link saluran
@@ -35,6 +35,6 @@ module.exports = {
             if (!id) throw new Error("Saluran tidak ditemukan")
         }
         await sock.newsletterUpdatePicture(id, media.buffer)
-        await m.reply("✅ Foto profil saluran diganti (kamu harus admin/owner saluran itu).")
+        await m.reply("Foto profil saluran diganti (kamu harus admin/owner saluran itu).")
     }
 }

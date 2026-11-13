@@ -24,7 +24,7 @@ const feature = async ({ rbG, rbLib }) => {
     const target = getTarget(m, text)
     const khodams = ['Kucing Oren Berpeci', 'Naga Salju Sakti', 'Kuntilanak Merah Lembut', 'Harimau Putih Berjas', 'Tuyul Pembalap', 'Pocong Lincah', 'Kera Sakti Gunung']
     const res = khodams[Math.floor(Math.random() * khodams.length)]
-    await m.reply(`╭─── ୨୧ CEK KHODAM ୨୧ ───╮\n│ ૮₍˶ᵔ ᵕ ᵔ˶₎ა pendamping gaib!\n╰────────────────────────╯\n\n୨ৎ Target: ${target.name}\n୨ৎ Khodam: *${res}* 👻`, null, { mentions: target.mentions })
+    await m.reply(`╭─── ୨୧ CEK KHODAM ୨୧ ───╮\n│ ૮₍˶ᵔ ᵕ ᵔ˶₎ა pendamping gaib!\n╰────────────────────────╯\n\n୨ৎ Target: ${target.name}\n୨ৎ Khodam: *${res}*`, null, { mentions: target.mentions })
   }
   handler.help = ['cekkhodam [@tag/nama]']
   handler.tags = ['fun']

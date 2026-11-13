@@ -4,7 +4,7 @@ module.exports = tool({
     name: "quotesbijak",
     command: ["quotesbijak", "bijak"],
     endpoint: "quotes-bijak",
-    title: "🧘 Quotes Bijak",
+    title: "Quotes Bijak",
     desc: "Quotes bijak acak",
     output: "text"
 })

@@ -30,4 +30,4 @@ Semua fitur plugin Fuyuha Shina MD ada di sini, satu folder per kategori menu:
 - `fun/lama/` = fitur Fun gaya API (artinama, cekjodoh, pap, quotes*, dst), CommonJS, dimuat lewat `source/PluginLoader.js` dari `source/Fun.js`.
 - `grup/` = command (toggle anti, welcome, swgc, getpp/setpp, sulap, auto). Yang jalan otomatis tanpa command (hapus pesan, notif promote/demote, auto read) ada di `source/GroupGuard.js`, dipanggil dari `fuyuha.js` & `main.js`.
 
-- Semua file database (database.json, bljpm/blpush/contacts, komiku.json) ada di folder `/database`, path-nya diatur `source/DbPath.js`. File lama di `/storage` otomatis dipindah.
+- Semua file database (database.json, komiku.json) ada di folder `/database`, path-nya diatur `source/DbPath.js`. File lama di `/storage` otomatis dipindah.

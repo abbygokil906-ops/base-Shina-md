@@ -1,6 +1,6 @@
 /*
   PanelSpec — RAM / Disk / CPU per paket panel (1GB - 10GB, unlimited).
-  Dipakai bersama oleh fitur panel reseller (fuyuha.js) dan Warung (source/Warung.js).
+  Dipakai bersama oleh fitur panel reseller (fuyuha.js) (dulu juga dipakai fitur Warung, sudah dihapus).
   Satuan: ram & disk dalam MB, cpu dalam persen. "0" = unlimited.
 */
 module.exports = {

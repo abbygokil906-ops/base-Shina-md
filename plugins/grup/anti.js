@@ -28,10 +28,10 @@ module.exports = {
         const f = FEATURES[ALIAS[command] || command]
         const g = gdata(m.chat)
         const val = onOff(args[0] || "")
-        if (val === null) throw new Usage(`*${f.label}* : ${g[f.key] ? "✅ Aktif" : "❌ Mati"}\n\nPakai: ${prefix}${command} on/off`)
+        if (val === null) throw new Usage(`*${f.label}* : ${g[f.key] ? "Aktif" : "Mati"}\n\nPakai: ${prefix}${command} on/off`)
         g[f.key] = val
         let note = ""
         if (val && f.needBot && !m.isBotAdmin) note = "\n\n⚠️ Bot belum jadi admin grup, jadi belum bisa menghapus pesan. Jadikan bot admin dulu."
-        await m.reply(`${val ? "✅ Berhasil menyalakan" : "✅ Berhasil mematikan"} *${f.label}* di grup ini.${note}`)
+        await m.reply(`${val ? "Berhasil menyalakan" : "Berhasil mematikan"} *${f.label}* di grup ini.${note}`)
     }
 }

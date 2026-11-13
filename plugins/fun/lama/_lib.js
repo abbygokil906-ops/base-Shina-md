@@ -40,9 +40,9 @@ function tool(def) {
             const payload = res.json.result ?? res.json.data ?? res.json
             if (def.output === "image") {
                 const url = kit.findUrl(payload) || kit.findUrl(res.json)
-                if (url) return ctx.sock.sendMessage(ctx.m.chat, { image: { url }, caption: def.title || "✅ Selesai" }, { quoted: ctx.m })
+                if (url) return ctx.sock.sendMessage(ctx.m.chat, { image: { url }, caption: def.title || "Selesai" }, { quoted: ctx.m })
             }
-            const body = bodyOf(payload) || "✅ Selesai"
+            const body = bodyOf(payload) || "Selesai"
             await ctx.m.reply((def.title ? `*${def.title}*\n\n` : "") + body.slice(0, 3500))
         }
     }

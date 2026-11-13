@@ -35,7 +35,7 @@ module.exports = {
     usage: "",
     example: "",
     async run({ sock, m }) {
-        if (!m.isGroup) return m.reply("❌ Fitur ini cuma bisa di grup, soalnya bot milih jodoh dari anggota grupnya.")
+        if (!m.isGroup) return m.reply("Fitur ini cuma bisa di grup, soalnya bot milih jodoh dari anggota grupnya.")
         let meta = m.metadata
         if (!meta?.participants) meta = await sock.groupMetadata(m.chat)
         const me = [m.sender, m.key?.participantPn, m.key?.participantAlt].filter(Boolean).map(digits)

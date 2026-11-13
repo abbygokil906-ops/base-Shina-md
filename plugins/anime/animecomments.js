@@ -4,7 +4,7 @@ module.exports = tool({
     name: "animecomments",
     command: ["animecomments", "animekomen"],
     endpoint: "comments",
-    title: "💬 Komentar Episode",
+    title: "Komentar Episode",
     desc: "Komentar dari satu episode",
     usage: "<id episode/link> [halaman]",
     example: "one-piece-episode-1",

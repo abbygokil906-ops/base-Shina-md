@@ -4,7 +4,7 @@ module.exports = tool({
     name: "pap",
     command: ["pap"],
     endpoint: "pap",
-    title: "📸 Pap",
+    title: "Pap",
     desc: "Gambar pap acak dari Pinterest",
     output: "image"
 })

@@ -37,7 +37,7 @@ function answerOf(payload) {
     for (const k of SUGGEST_KEYS) {
         const v = payload[k]
         if (Array.isArray(v) && v.length) {
-            extra = "\n\n💡 *Pertanyaan lanjutan:*\n" + v.slice(0, 5).map((x) => `• ${scalar(x) ? x : x.question || x.text || kit.fmt(x)}`).join("\n")
+            extra = "\n\n *Pertanyaan lanjutan:*\n" + v.slice(0, 5).map((x) => `• ${scalar(x) ? x : x.question || x.text || kit.fmt(x)}`).join("\n")
             break
         }
     }

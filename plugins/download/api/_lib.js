@@ -77,19 +77,19 @@ function pickQuality(list, want, kind) {
 }
 
 function infoText(p, extra = "") {
-    if (!p || typeof p !== "object" || Array.isArray(p)) return extra || "✅ Selesai"
+    if (!p || typeof p !== "object" || Array.isArray(p)) return extra || "Selesai"
     const g = (...ks) => { for (const k of ks) { const v = p[k]; if (v !== undefined && v !== null && typeof v !== "object" && String(v).trim()) return String(v).trim() } }
     const who = g("author", "username", "nickname", "artist", "artists", "channel", "uploader") ||
         (p.author && typeof p.author === "object" ? p.author.nickname || p.author.name || p.author.username : undefined)
     const lines = []
     const title = g("title", "caption", "name", "filename", "fileName", "judul")
     if (title) lines.push(`*${title.slice(0, 300)}*`)
-    if (who) lines.push(`👤 ${who}`)
-    const album = g("album"); if (album) lines.push(`💿 ${album}`)
+    if (who) lines.push(`${who}`)
+    const album = g("album"); if (album) lines.push(`${album}`)
     const dur = g("duration", "durasi"); if (dur) lines.push(`⏱️ ${dur}`)
-    const size = g("size", "filesize", "fileSize", "ukuran"); if (size) lines.push(`📦 ${size}`)
+    const size = g("size", "filesize", "fileSize", "ukuran"); if (size) lines.push(`${size}`)
     if (extra) lines.push(extra)
-    return lines.join("\n") || "✅ Selesai"
+    return lines.join("\n") || "Selesai"
 }
 
 /* ---------- kirim hasil ---------- */
@@ -115,7 +115,7 @@ async function deliver(ctx, def, json) {
         const pick = pickQuality(list, want, def.output)
         if (pick) {
             const root = Array.isArray(payload) ? {} : payload
-            const cap = infoText(root, pick.n ? `🎞️ ${pick.n}${def.output === "audio" ? "kbps" : "p"}` : "")
+            const cap = infoText(root, pick.n ? `${pick.n}${def.output === "audio" ? "kbps" : "p"}` : "")
             await safeSend(ctx, def.output, pick.url, cap, `${def.name}.${def.output === "audio" ? "mp3" : "mp4"}`)
             return
         }
@@ -147,7 +147,7 @@ async function deliver(ctx, def, json) {
             first = false
         }
         if (groups.audio.length) {
-            if (first && cap !== "✅ Selesai") await ctx.m.reply(cap).catch(() => {})   // audio tidak punya caption -> info lagu dikirim sebagai teks
+            if (first && cap !== "Selesai") await ctx.m.reply(cap).catch(() => {})   // audio tidak punya caption -> info lagu dikirim sebagai teks
             await safeSend(ctx, "audio", groups.audio[0].url, "", `${def.name}.mp3`); sent++
         }
         else if (first && groups.document.length) { await safeSend(ctx, "document", groups.document[0].url, cap); sent++ }

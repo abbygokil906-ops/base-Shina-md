@@ -75,8 +75,6 @@ const database = new DataBase();
     users: load.users || {},
     groups: load.groups || {},
     settings: load.settings || {},
-    nokos: load.nokos || {},
-    warung: load.warung || {},
     guilds: load.guilds || {}
   };
   await database.write(global.db);
@@ -173,8 +171,6 @@ async function startBot() {
             }
         } else if (connection === "open") {
             await loadDatabase(sock)
-            try { require("./source/Nokos.js").resume(sock) } catch (e) { console.log("[Nokos] resume gagal:", e.message) }
-            try { require("./source/Warung.js").resume(sock) } catch (e) { console.log("[Warung] resume gagal:", e.message) }
             try { require("./source/Menu.js").warmAudio() } catch (e) {}
             try { require("./source/Adzan.js").start(sock) } catch (e) { console.log("[Adzan] gagal start:", e.message) }
             try { require("./source/Game.js").load() } catch (e) { console.log("[Game] gagal memuat:", e.message) }
@@ -186,9 +182,7 @@ async function startBot() {
                     name: global.namaBot,
                     number: String(sock.user.id).split(":")[0].split("@")[0],
                     owner: global.owner,
-                    public: sock.public !== false,
-                    warung: !!(st.warung && st.warung.mode),
-                    nokos: !!(st.nokos && st.nokos.mode)
+                    public: sock.public !== false
                 });
             } catch (e) { console.log("Bot Berhasil Tersambung ✓"); }
         try {

@@ -4,7 +4,7 @@ module.exports = tool({
     name: "animedetail",
     command: ["animedetail", "animeinfo"],
     endpoint: "detail",
-    title: "📺 Detail Anime",
+    title: "Detail Anime",
     desc: "Detail anime + season, episode terbaru, trailer",
     usage: "<id/slug/link>",
     example: "one-piece",

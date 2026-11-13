@@ -1,12 +1,9 @@
 /*
-  Template — kategori "Template" (bikin gambar testimoni dari template).
+  Template — kategori "Template" (bikin gambar estetik dari template).
   SEMUA fitur ada di SATU file ini -> kalau mau update cukup timpa file ini.
+  (Template testimoni/bukti-transaksi & scan-to-pay buat jualan sudah dihapus dari sini.)
 
   Cara pakai:
-    .testimoni1WELPER ID,6283838637,@welperid,10.000
-     (nama , nomor WA , user IG , nominal transaksi)  -> bot minta 3 foto: bukti transaksi (kanan), bukti transaksi done (kiri), foto spek akun (tengah)
-    .testimoni2Metha Store   (template biru)  -> nama store otomatis ganti, bot minta 2 foto: bukti transaksi (kanan), bukti transaksi done (kiri)
-    .testimoni3Sopieyy Store (template pink)  -> sama seperti di atas
   .tempel1 s/d .tempel6  (Tempel Foto) -> tanpa teks, langsung kirim foto sesuai urutan yang diminta bot, fotonya ditempel ke kotak hijau template
      (kotak boleh miring / perspektif: layar laptop, polaroid, dll). Template = media/tempel1.png..tempel6.png dengan lubang transparan.
   FOTO ESTETIK (command tmpl*, detail tiap template ada di source/FotoEstetik.js; ketik .tmpl untuk daftar lengkap):
@@ -26,7 +23,7 @@
   Foto otomatis pas ke kotaknya (tidak gepeng): kalau rasio foto mirip kotak -> diisi penuh (crop tengah),
   kalau beda jauh (mis. screenshot HP tinggi masuk kotak lebar) -> ditampilkan utuh di tengah kotak.
 
-  Tambah template baru: tambahkan satu entri di TEMPLATES (angka = nomor command, mis. .testimoni2),
+  Tambah template baru: tambahkan satu entri di TEMPLATES,
   taruh gambarnya di folder /media, lalu daftarkan command-nya di source/MenuData.js (kategori Template).
   Pakai @napi-rs/canvas (sudah ada di package.json), template & font di-cache jadi ringan.
 */
@@ -44,114 +41,6 @@ const RUPIAH_PREFIX = true   // true: "10.000" tampil "Rp 10.000"
 
 // koordinat dihitung dari ukuran asli tiap template. fields = urutan data di command, draw = cara menulis data ke gambar
 const TEMPLATES = {
-    testimoni1: {
-        file: "testimoni-template.jpg",   // 1792x2400 (Dians Visual)
-        title: "Dians Visual (Free Fire, 3 foto)",
-        fields: ["nama", "nomor", "ig", "nominal"],
-        example: "WELPER ID,6283838637,@welperid,10.000",
-        // urutan foto yang diminta bot -> kotak tujuan di template
-        photos: [
-            { label: "bukti transaksi", slot: { x: 933, y: 661, w: 541, h: 963 } },        // kanan
-            { label: "bukti transaksi done", slot: { x: 319, y: 661, w: 541, h: 963 } },   // kiri
-            { label: "foto spek akun", slot: { x: 582, y: 986, w: 628, h: 310 } }          // tengah
-        ],
-        radius: 34,
-        name: { cx: 890, top: 445, bottom: 540, maxW: 740 },                   // ganti teks "DIANS VISUAL"
-        nominal: { cx: 576, cy: 1809, maxW: 520, size: 64, color: "#1b1f8f" },
-        wa: { x: 405, cy: 1987, maxW: 640, size: 46 },
-        ig: { x: 1152, cy: 1987, maxW: 370, size: 46 },
-        draw(ctx, d, t) {
-            drawTitle(ctx, d.nama, t.name)
-            drawLine(ctx, d.nominal, t.nominal, { align: "center", color: t.nominal.color, shadow: false })
-            drawLine(ctx, d.nomor, t.wa)
-            drawLine(ctx, d.ig, t.ig)
-        }
-    },
-    testimoni2: {
-        file: "testimoni-template2.png", overlay: true,   // 736x736 (Metha Store, biru)
-        title: "Metha Store (biru, 2 foto)",
-        fields: ["nama"],
-        example: "Metha Store",
-        photos: [
-            { label: "bukti transaksi", slot: { x: 315, y: 119, w: 203, h: 466 } },        // kanan
-            { label: "bukti transaksi done", slot: { x: 91, y: 116, w: 204, h: 467 } }      // kiri
-        ],
-        radius: 22,
-        draw(ctx, d) {
-            drawBubbleLogo(ctx, d.nama, { cx: 372, cy: 668, maxW: 640, size: 120 })
-            drawBanner(ctx, `Welcome to ${d.nama} |`, { right: 388, cy: 40, maxW: 298, size: 21 })
-        }
-    },
-    testimoni3: {
-        file: "testimoni-template3.png", overlay: true,   // 736x552 (Sopieyy Store, pink)
-        title: "Sopieyy Store (pink, 2 foto)",
-        fields: ["nama"],
-        example: "Sopieyy Store",
-        photos: [
-            { label: "bukti transaksi", slot: { x: 477, y: 106, w: 204, h: 379 } },         // kanan
-            { label: "bukti transaksi done", slot: { x: 254, y: 108, w: 203, h: 375 } }     // kiri
-        ],
-        radius: 30,
-        draw(ctx, d) { drawPinkPlate(ctx, d.nama, { x: 262, y: 487, w: 298, h: 60, maxW: 250, size: 40 }) }
-    },
-    templqrs1: {
-        file: "templqrs1.jpg",   // 735x554 (Healing Choi, scan to pay hitam putih)
-        title: "Scan To Pay hitam-putih (Healing Choi)",
-        fields: ["nama"], example: "Healing Choi",
-        photos: [{ label: "foto QR", slot: { x: 116, y: 174, w: 300, h: 282 }, fit: "contain", inset: 8 }],
-        radius: 18,
-        draw(ctx, d) {
-            plate(ctx, 54, 106, 224, 40, 20, "#ffffff", "#ececec", "#111111")
-            plainText(ctx, d.nama, 166, 126, 190, 26, "#111111")
-        }
-    },
-    templqrs2: {
-        file: "templqrs2.jpg",   // 736x736 (awen store, kucing hitam-putih)
-        title: "Scan Me kucing (awen store)",
-        fields: ["nama"], example: "awen store",
-        photos: [{ label: "foto QR", slot: { x: 176, y: 214, w: 388, h: 380 }, fill: "#ececec", fit: "contain", inset: 10 }],
-        radius: 44,
-        draw(ctx, d) { plainText(ctx, d.nama, 370, 680, 205, 30, "#ffffff", { font: SERIF, skew: -0.2 }) }
-    },
-    templqrs3: {
-        file: "templqrs3.jpg",   // 736x736 (Rayy Store, krem)
-        title: "Payment location krem (Rayy Store)",
-        fields: ["nama"], example: "Rayy Store",
-        photos: [{ label: "foto QR", slot: { x: 380, y: 368, w: 308, h: 312 }, fit: "contain", inset: 8 }],
-        radius: 26,
-        draw(ctx, d) {
-            plainText(ctx, `${d.nama.toLowerCase()} payment location`, 433, 31, 330, 21, "#9a8461")
-            const [a, b] = splitName(d.nama)
-            plate(ctx, 434, 168, 228, 108, 30, "#fffaf0", "#eadcc0", "#a89068")
-            bubble(ctx, a, 548, 224, 190, 82, SAND)
-            plate(ctx, 402, 280, 226, 38, 19, "#ffffff", "#f1e8d6", "#a89068")
-            plainText(ctx, b.toLowerCase(), 515, 299, 190, 26, "#5a4a33")
-        }
-    },
-    templqrs4: {
-        file: "templqrs4.png", overlay: true,   // 736x736 (Areu Store, pink kelinci)
-        title: "Scan Here pink kelinci (Areu Store)",
-        fields: ["nama"], example: "Areu Store",
-        photos: [{ label: "foto QR", slot: { x: 62, y: 207, w: 316, h: 342 }, fit: "contain", inset: 10 }],
-        radius: 40,
-        draw(ctx, d) {
-            plate(ctx, 378, 560, 352, 90, 45, "#ffe9f3", "#ffc6df", "#ee8fbd")
-            bubble(ctx, d.nama, 554, 604, 310, 66, PINK)
-        }
-    },
-    templqrs5: {
-        file: "templqrs5.png", overlay: true,   // 736x736 (Xuan Store, pink ungu)
-        title: "Scan Here pink ungu (Xuan Store)",
-        fields: ["nama"], example: "Xuan Store",
-        photos: [{ label: "foto QR", slot: { x: 286, y: 119, w: 360, h: 348 }, fit: "contain", inset: 10 }],
-        radius: 40,
-        draw(ctx, d) {
-            const [a, b] = splitName(d.nama)
-            plate(ctx, 14, 384, 284, 208, 46, "#ffe3f2", "#f6b4da", "#c46aa8")
-            bubble(ctx, a, 156, 450, 236, 96, PINK2)
-            bubble(ctx, b.toLowerCase(), 156, 537, 236, 82, PINK2)
-        }
-    },
     tmplposter: {
         // tidak pakai file template: foto jadi latar penuh, teks poster digambar lewat code (lihat drawEstetik)
         size: [1080, 1620],   // rasio 2:3 seperti poster aslinya (736x1104)
@@ -373,117 +262,6 @@ function drawPhotoQuad(ctx, img, quad, pad = 4) {
         tri(s(u0, v0), s(u1, v0), s(u1, v1), P00, P10, P11)
         tri(s(u0, v0), s(u1, v1), s(u0, v1), P00, P11, P01)
     }
-}
-
-function drawTitle(ctx, text, c) {
-    const t = text.toUpperCase()
-    const midY = (c.top + c.bottom) / 2
-    const size = fitFont(ctx, t, 124, c.maxW, "bold")
-    ctx.font = `bold ${size}px ${FONT}`
-    ctx.textAlign = "center"
-    ctx.textBaseline = "middle"
-    ctx.lineJoin = "round"
-    const outline = Math.max(8, Math.round(size * 0.1))
-    // tebal 3D (bawah)
-    ctx.fillStyle = "#1411a8"; ctx.strokeStyle = "#1411a8"; ctx.lineWidth = outline
-    for (let i = 14; i >= 6; i -= 2) { ctx.strokeText(t, c.cx, midY + i); ctx.fillText(t, c.cx, midY + i) }
-    // outline biru tua
-    ctx.strokeStyle = "#2a2fd6"; ctx.lineWidth = outline
-    ctx.strokeText(t, c.cx, midY)
-    // isi gradasi cyan -> biru
-    const g = ctx.createLinearGradient(0, midY - size / 2, 0, midY + size / 2)
-    g.addColorStop(0, "#9be8ff"); g.addColorStop(0.5, "#46b8ff"); g.addColorStop(1, "#1f7bea")
-    ctx.fillStyle = g
-    ctx.fillText(t, c.cx, midY)
-    // garis tipis terang biar timbul
-    ctx.strokeStyle = "rgba(255,255,255,0.55)"; ctx.lineWidth = 2
-    ctx.strokeText(t, c.cx, midY - 1)
-}
-
-function drawLine(ctx, text, c, { align = "left", color = "#ffffff", shadow = true } = {}) {
-    const size = fitFont(ctx, text, c.size, c.maxW)
-    ctx.font = `bold ${size}px ${FONT}`
-    ctx.textAlign = align
-    ctx.textBaseline = "middle"
-    const x = align === "center" ? c.cx : c.x
-    const y = align === "center" ? c.cy : c.cy
-    if (shadow) { ctx.fillStyle = "rgba(0,0,40,0.45)"; ctx.fillText(text, x + 2, y + 3) }
-    ctx.fillStyle = color
-    ctx.fillText(text, x, y)
-}
-
-function drawBubbleLogo(ctx, text, c) {
-    const size = fitFont(ctx, text, c.size, c.maxW)
-    ctx.font = `bold ${size}px ${FONT}`
-    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round"
-    for (const [w, col] of [[size * 0.26, "#1d72ad"], [size * 0.19, "#ffffff"], [size * 0.07, "#2d7fd1"]]) {
-        ctx.lineWidth = w; ctx.strokeStyle = col; ctx.strokeText(text, c.cx, c.cy)
-    }
-    const g = ctx.createLinearGradient(0, c.cy - size / 2, 0, c.cy + size / 2)
-    g.addColorStop(0, "#3f86e0"); g.addColorStop(0.55, "#8fbcf0"); g.addColorStop(1, "#f4f9ff")
-    ctx.fillStyle = g; ctx.fillText(text, c.cx, c.cy)
-}
-
-function drawBanner(ctx, text, c) {
-    let s = c.size
-    for (; s > 10; s--) { ctx.font = `bold ${s}px ${SERIF}`; if (ctx.measureText(text).width <= c.maxW) break }
-    ctx.textAlign = "right"; ctx.textBaseline = "middle"
-    ctx.fillStyle = "#f2f8ff"; ctx.fillText(text, c.right, c.cy)
-}
-
-function drawPinkPlate(ctx, text, c) {
-    ctx.save()
-    roundPath(ctx, c.x, c.y, c.w, c.h, c.h / 2)
-    const g = ctx.createLinearGradient(0, c.y, 0, c.y + c.h)
-    g.addColorStop(0, "#ffe6f1"); g.addColorStop(1, "#ffbfdb")
-    ctx.fillStyle = g; ctx.fill()
-    ctx.lineWidth = 5; ctx.strokeStyle = "#ffffff"; ctx.stroke()
-    ctx.lineWidth = 2; ctx.strokeStyle = "#ff8fbf"; ctx.stroke()
-    ctx.restore()
-    const size = fitFont(ctx, text, c.size, c.maxW)
-    ctx.font = `bold ${size}px ${FONT}`
-    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round"
-    const cx = c.x + c.w / 2, cy = c.y + c.h / 2
-    ctx.lineWidth = 6; ctx.strokeStyle = "#ffffff"; ctx.strokeText(text, cx, cy)
-    ctx.fillStyle = "#ff5c9e"; ctx.fillText(text, cx, cy)
-}
-
-// teks gelembung bertumpuk (outline luar, putih, outline dalam, isi gradasi)
-function bubble(ctx, text, cx, cy, maxW, size, st) {
-    const sz = fitFont(ctx, text, size, maxW)
-    ctx.font = `bold ${sz}px ${FONT}`
-    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round"
-    for (const [k, col] of [[0.24, st.outer], [0.17, "#ffffff"], [st.inner ? 0.06 : 0, st.inner]]) {
-        if (!k || !col) continue
-        ctx.lineWidth = sz * k; ctx.strokeStyle = col; ctx.strokeText(text, cx, cy)
-    }
-    const g = ctx.createLinearGradient(0, cy - sz / 2, 0, cy + sz / 2)
-    for (const [o, col] of st.stops) g.addColorStop(o, col)
-    ctx.fillStyle = g; ctx.fillText(text, cx, cy)
-}
-
-function plate(ctx, x, y, w, h, r, fill1, fill2, line) {
-    ctx.save()
-    roundPath(ctx, x, y, w, h, r)
-    const g = ctx.createLinearGradient(0, y, 0, y + h)
-    g.addColorStop(0, fill1); g.addColorStop(1, fill2)
-    ctx.fillStyle = g; ctx.fill()
-    ctx.lineWidth = 6; ctx.strokeStyle = "#ffffff"; ctx.stroke()
-    ctx.lineWidth = 2.5; ctx.strokeStyle = line; ctx.stroke()
-    ctx.restore()
-}
-
-// "Rayy Store" -> ["Rayy", "Store"]; satu kata saja -> kata kedua "Store"
-const splitName = (n) => { const w = String(n).trim().split(/\s+/); return [w[0], w.slice(1).join(" ") || "Store"] }
-
-function plainText(ctx, text, cx, cy, maxW, size, color, { font = FONT, skew = 0, align = "center" } = {}) {
-    let sz = size
-    for (; sz > 10; sz--) { ctx.font = `bold ${sz}px ${font}`; if (ctx.measureText(text).width <= maxW) break }
-    ctx.save()
-    ctx.translate(cx, cy); if (skew) ctx.transform(1, 0, skew, 1, 0, 0)
-    ctx.textAlign = align; ctx.textBaseline = "middle"; ctx.fillStyle = color
-    ctx.fillText(text, 0, 0)
-    ctx.restore()
 }
 
 /* ---------- template ESTETIK (poster: foto latar + teks) ---------- */
@@ -808,9 +586,6 @@ function renderIgYellow(ctx, d, t, img, W, H) {
     ctx.restore()
 }
 
-const PINK = { outer: "#ee8fbd", inner: "#f6a6cb", stops: [[0, "#ffffff"], [1, "#ffcfe5"]] }
-const PINK2 = { outer: "#c46aa8", inner: "#d98cc2", stops: [[0, "#ffffff"], [0.5, "#ffffff"], [0.52, "#ffb3dc"], [1, "#ffa6d4"]] }
-const SAND = { outer: "#8d7a5b", inner: "#b5a07a", stops: [[0, "#fffaf0"], [0.5, "#e9dcc2"], [1, "#b5a07a"]] }
 
 // extra.cutout = Buffer PNG orang tanpa latar (opsional, khusus template dengan tpl.cutout)
 async function compose(tpl, data, photos, extra = {}) {
@@ -870,10 +645,10 @@ const ALIAS = { estetik1: "tmplposter", estetik2: "tmplhijau", estetik3: "tmplku
 
 const keys = Object.keys(TEMPLATES).sort((a, b) => b.length - a.length)
 const CMD_RE = new RegExp(`^(${keys.join("|")})(.*)$`, "is")
-const GROUPS = { testimoni: "Testimoni", templqrs: "Template QR", tempel: "Tempel Foto", tmpl: "Foto Estetik" }
+const GROUPS = { tempel: "Tempel Foto", tmpl: "Foto Estetik" }
 
-// n = nama template (mis. "testimoni2"); group = "testimoni" / "templqrs" / "tmpl" (daftar semua template di grup itu)
-const usage = (prefix, n, group = "testimoni") => {
+// n = nama template; group = "tempel" / "tmpl" (daftar semua template di grup itu)
+const usage = (prefix, n, group = "tmpl") => {
     const t = TEMPLATES[n]
     if (!t) {
         const ks = Object.keys(TEMPLATES).filter((k) => k.startsWith(group))
@@ -888,9 +663,9 @@ const askText = (tpl, i) => `📸 Kirim foto *${tpl.photos[i].label}* (${i + 1}/
 async function handle({ sock, m, isOwner }) {
     if (!Canvas) return false
     const prefix = m.prefix || "."
-    let raw = String(m.body || "").slice(prefix.length).trim().replace(/^(testimoni|templqrs|tempel|estetik)\s+(\d)/i, "$1$2")   // ".testimoni 2 nama" juga bisa
+    let raw = String(m.body || "").slice(prefix.length).trim().replace(/^(tempel|estetik)\s+(\d)/i, "$1$2")   // ".tempel 2" juga bisa
     raw = raw.replace(/^(estetik[123])(?!\d)/i, (x) => ALIAS[x.toLowerCase()])   // .estetik1/2/3 (nama lama) -> nama baru
-    const bare = raw.match(/^(testimoni|templqrs|tempel|tmpl|estetik)\s*$/i)
+    const bare = raw.match(/^(tempel|tmpl|estetik)\s*$/i)
     if (bare) { await m.reply(usage(prefix, null, bare[1].toLowerCase() === "estetik" ? "tmpl" : bare[1].toLowerCase())); return true }
     const hit = raw.match(CMD_RE)
     if (!hit) return false

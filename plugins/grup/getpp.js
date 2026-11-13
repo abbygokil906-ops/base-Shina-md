@@ -17,7 +17,7 @@ module.exports = {
         }
         let url
         try { url = await sock.profilePictureUrl(jid, "image") } catch (e) { url = null }
-        if (!url) return m.reply(`❌ Foto profil ${label} tidak ada / disembunyikan.`)
-        await sock.sendMessage(m.chat, { image: { url }, caption: `🖼️ Foto profil ${label}`, mentions: command === "getpp" ? [jid] : [] }, { quoted: m })
+        if (!url) return m.reply(`Foto profil ${label} tidak ada / disembunyikan.`)
+        await sock.sendMessage(m.chat, { image: { url }, caption: `Foto profil ${label}`, mentions: command === "getpp" ? [jid] : [] }, { quoted: m })
     }
 }

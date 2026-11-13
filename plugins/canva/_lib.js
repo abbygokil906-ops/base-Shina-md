@@ -54,7 +54,7 @@ function tool(def) {
         async run(ctx) {
             const params = await buildParams(ctx, fields)
             const res = await base.call(def.endpoint, params, def.timeout || 120000, "canvas")
-            const caption = ["✅ Selesai", note].filter(Boolean).join("\n")
+            const caption = ["Selesai", note].filter(Boolean).join("\n")
             const q = { quoted: ctx.m }
             if (res.buffer) return ctx.sock.sendMessage(ctx.m.chat, { image: res.buffer, caption }, q)
             const payload = res.json.result ?? res.json.data ?? res.json

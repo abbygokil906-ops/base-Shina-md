@@ -63,14 +63,14 @@ function tool(def) {
 
             const res = await base.call(def.endpoint, params, def.timeout || 180000, "ai-image")
             const q = { quoted: m }
-            if (res.buffer) return ctx.sock.sendMessage(m.chat, { image: res.buffer, caption: "✅ Selesai" }, q)
+            if (res.buffer) return ctx.sock.sendMessage(m.chat, { image: res.buffer, caption: "Selesai" }, q)
             const payload = res.json?.result ?? res.json?.data ?? res.json
             if (output === "text") {
                 const t = scalar(payload) ? String(payload) : kit.textOf(res.json)
                 return m.reply(`*${def.title || "Hasil"}*\n\n${t}`.slice(0, 3800))
             }
             const url = kit.findUrl(payload) || kit.findUrl(res.json)
-            if (url) return ctx.sock.sendMessage(m.chat, { image: { url }, caption: "✅ Selesai" }, q)
+            if (url) return ctx.sock.sendMessage(m.chat, { image: { url }, caption: "Selesai" }, q)
             await m.reply(kit.textOf(res.json))
         }
     }

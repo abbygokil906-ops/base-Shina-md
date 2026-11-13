@@ -8,7 +8,6 @@
   Catatan:
   - Owner tidak pernah kena gerbang ini.
   - Yang kena cuma COMMAND (pesan berawalan prefix). Chat biasa tidak memicu apa-apa.
-  - Saat Nokos Mode / Warung Mode ON, gerbang chat pribadi dilewati supaya jualan di PC tetap jalan.
   - Ganti kata-kata balasan di GROUPONLY2_TEXT.
 */
 const GROUPONLY2_TEXT =
@@ -17,12 +16,6 @@ const GROUPONLY2_TEXT =
     "Karena lu udah ngelanggar, lu gua blokir. Bye 👋"
 
 const blocking = new Set() // supaya yang spam beberapa command sekaligus cuma dibalas & diblokir sekali
-
-const storeMode = () => {
-    try { if (require("./Nokos.js").modeOn()) return true } catch (_) {}
-    try { if (require("./Warung.js").modeOn()) return true } catch (_) {}
-    return false
-}
 
 const settings = () => { if (typeof global.db.settings !== "object") global.db.settings = {}; return global.db.settings }
 const gdata = (jid) => { if (typeof global.db.groups[jid] !== "object") global.db.groups[jid] = {}; return global.db.groups[jid] }
@@ -43,7 +36,6 @@ async function check({ sock, m, isCmd, isOwner }) {
     // chat pribadi
     const st = settings()
     if (!st.grupOnly && !st.grupOnly2) return false
-    if (storeMode()) return false
 
     if (st.grupOnly2) {
         if (blocking.has(m.chat)) return true

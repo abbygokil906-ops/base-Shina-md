@@ -4,7 +4,7 @@ module.exports = tool({
     name: "animestream",
     command: ["animestream", "animenonton"],
     endpoint: "stream",
-    title: "▶️ Link Nonton",
+    title: "Link Nonton",
     desc: "Link nonton (direct & embed) satu episode",
     usage: "<id episode/link>",
     example: "one-piece-episode-1",

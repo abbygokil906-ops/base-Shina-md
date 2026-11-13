@@ -117,7 +117,7 @@ async function intro() {
     if (introDone) return
     introDone = true
     await banner()
-    await typeLine("Warung ♡ Nokos ♡ Panel ♡ Script", { delay: 9, indent: " " })
+    await typeLine("Panel ♡ Script", { delay: 9, indent: " " })
     out(` ${gtext("✦ ─────────── ♡ ─────────── ✦", 0)}\n`)
 }
 
@@ -233,8 +233,6 @@ async function connected(info = {}) {
         [`${grad(10, 0)}♡${RST}`, "Bot   ", `${gtext(info.name || "Fuyuha Shina MD", 2, true)}`],
         [`${grad(25, 0)}♡${RST}`, "Nomor ", `${WHITE}${info.number || "-"}${RST}`],
         [`${grad(40, 0)}♡${RST}`, "Mode  ", `${info.public === false ? "Self" : "Public"}`],
-        [`${grad(55, 0)}♡${RST}`, "Warung", on(info.warung)],
-        [`${grad(70, 0)}♡${RST}`, "Nokos ", on(info.nokos)],
         [`${grad(85, 0)}♡${RST}`, "Owner ", `${info.owner || "-"}`]
     ]
     for (const [a, b, c] of rows) {

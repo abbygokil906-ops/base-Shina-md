@@ -1,32 +1,6 @@
 /* Data menu bot. Tambah/ubah fitur di sini saja. */
 module.exports = [
     {
-        key: "nokos",
-        name: "Nokos",
-        icon: "📲",
-        cmds: [".start", ".ordernokos", ".saldonokos", ".depositnokos", ".cekorder", ".riwayatnokos", ".statusserver"]
-    },
-    {
-        key: "nokosowner",
-        name: "Nokos Owner",
-        icon: "🛡️",
-        ownerOnly: true,
-        cmds: [".nokosmode", ".setnotifch", ".tesnotifch", ".setnamatoko", ".setnamaowner", ".tesmaintenance", ".saldoapi", ".addsaldonokos"]
-    },
-    {
-        key: "warung",
-        name: "Warung",
-        icon: "🏪",
-        cmds: [".start", ".warung", ".cekpesanan"]
-    },
-    {
-        key: "warungowner",
-        name: "Warung Owner",
-        icon: "🧰",
-        ownerOnly: true,
-        cmds: [".modewarung", ".settingwarung", ".addpanel", ".addscript", ".setharga", ".delproduk", ".listproduk", ".setchwarung", ".setnamawarung", ".setgateway", ".cekgateway", ".tesnotifwarung", ".orderwarung", ".kirimulang"]
-    },
-    {
         key: "game",
         name: "Game",
         icon: "🎮",
@@ -115,7 +89,7 @@ module.exports = [
         key: "setortemplate",
         name: "Template",
         icon: "🧾",
-        cmds: [".testimoni1", ".testimoni2", ".testimoni3", ".templqrs1", ".templqrs2", ".templqrs3", ".templqrs4", ".templqrs5", ".tempel1", ".tempel2", ".tempel3", ".tempel4", ".tempel5", ".tempel6"]
+        cmds: [".tempel1", ".tempel2", ".tempel3", ".tempel4", ".tempel5", ".tempel6"]
     },
     {
         key: "fotoestetik",
@@ -158,12 +132,6 @@ module.exports = [
         name: "Group",
         icon: "👥",
         cmds: [".antilink", ".antilink2", ".antilinkch", ".antitagch", ".antitagsw", ".antisw", ".antitoxic", ".antibokep", ".antidel", ".welcome", ".setwelcome", ".resetwelcome", ".statusgrup", ".hidetag", ".tagall", ".kick", ".open", ".close", ".swgc", ".getpp", ".getppgc", ".setppgc", ".sulap", ".gruponly", ".gruponly2", ".adminonly"]
-    },
-    {
-        key: "store",
-        name: "Store & Push",
-        icon: "🛒",
-        cmds: [".pushkontak", ".pushkontak2", ".savekontak", ".stoppush", ".setjeda", ".savenomor", ".autojpm", ".jpm", ".jpmht", ".jpmch", ".jpmslide", ".bljpm", ".listbljpm", ".statusjpm", ".statuspush", ".blpush", ".blpush2", ".stopjpm", ".payment", ".proses", ".done"]
     },
     {
         key: "panel",

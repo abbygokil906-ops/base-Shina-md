@@ -115,7 +115,7 @@ function tool(def) {
             const res = await base.call(def.endpoint, params, def.timeout || 90000, "animein")
             const payload = res.json?.result ?? res.json?.data ?? res.json
             const body = render(payload).trim() || "Tidak ada hasil."
-            const text = `${def.title ? `*${def.title}*\n\n` : ""}${body}${hint ? `\n\n💡 ${hint}` : ""}`
+            const text = `${def.title ? `*${def.title}*\n\n` : ""}${body}${hint ? `\n\n ${hint}` : ""}`
             const pics = def.poster ? poster(payload) : null
             const parts = chunks(text)
             if (pics) {

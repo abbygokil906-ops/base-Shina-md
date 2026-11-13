@@ -2,9 +2,8 @@
   Lokasi SEMUA file database bot: folder /database (di root bot).
   Pakai:  const DBP = require("./source/DbPath.js");  DBP("namafile.json")  ->  <root>/database/namafile.json
 
-  File lama di /storage (database.json, bljpm.json, blpush.json, blpush2.json, contacts.json, contacts.vcf)
-  otomatis DIPINDAH ke /database saat bot pertama jalan (kalau di /database belum ada file yang sama),
-  jadi data user tidak hilang. File non-database (video menu, file jualan Warung) tetap di /storage.
+  File lama di /storage (database.json) otomatis DIPINDAH ke /database saat bot pertama jalan
+  (kalau di /database belum ada file yang sama), jadi data user tidak hilang.
 
   Tambah database baru: cukup pakai DBP("nama-baru.json"), foldernya otomatis dibuat.
 */
@@ -13,7 +12,7 @@ const path = require("path")
 
 const DIR = path.join(process.cwd(), "database")
 const LEGACY = path.join(process.cwd(), "storage")
-const FILES = ["database.json", "bljpm.json", "blpush.json", "blpush2.json", "contacts.json", "contacts.vcf"]
+const FILES = ["database.json"]
 
 try { fs.mkdirSync(DIR, { recursive: true }) } catch (e) { console.log("[Database] gagal membuat folder database:", e.message) }
 

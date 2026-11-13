@@ -4,7 +4,7 @@ module.exports = tool({
     name: "animeepisodes",
     command: ["animeepisodes", "animeeps"],
     endpoint: "episodes",
-    title: "🎞️ Daftar Episode",
+    title: "Daftar Episode",
     desc: "Daftar episode anime (30 per halaman)",
     usage: "<id/slug/link> [halaman]",
     example: "one-piece 2",

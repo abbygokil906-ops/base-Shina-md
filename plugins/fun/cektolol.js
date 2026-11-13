@@ -23,7 +23,7 @@ const feature = async ({ rbG, rbLib }) => {
   const handler = async (m, { text }) => {
     const target = getTarget(m, text)
     const score = Math.floor(Math.random() * 101)
-    await m.reply(`╭─── ୨୧ CEK TOLOL ୨୧ ───╮\n│ ૮₍˶ᵔ ᵕ ᵔ˶₎ა radar ketololan!\n╰───────────────────────╯\n\n୨ৎ Target: ${target.name}\n୨ৎ Tingkat Tolol: *${score}%* 🤡`, null, { mentions: target.mentions })
+    await m.reply(`╭─── ୨୧ CEK TOLOL ୨୧ ───╮\n│ ૮₍˶ᵔ ᵕ ᵔ˶₎ა radar ketololan!\n╰───────────────────────╯\n\n୨ৎ Target: ${target.name}\n୨ৎ Tingkat Tolol: *${score}%*`, null, { mentions: target.mentions })
   }
   handler.help = ['cektolol [@tag/nama]']
   handler.tags = ['fun']

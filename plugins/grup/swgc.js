@@ -28,10 +28,6 @@ async function buildContent(m, caption) {
     return { text: teks }
 }
 
-const blacklist = () => {
-    try { return JSON.parse(fs.readFileSync(require("../../source/DbPath.js")("bljpm.json"), "utf8")).blacklistJpm || [] } catch (e) { return [] }
-}
-
 module.exports = {
     name: "swgc",
     command: ["swgc", "swgca"],
@@ -43,16 +39,14 @@ module.exports = {
         if (command === "swgca") {
             if (!isOwner) throw new Usage(global.mess?.owner || "Fitur ini hanya untuk ownerbot.")
             const content = await buildContent(m, text)
-            const all = Object.keys(await sock.groupFetchAllParticipating())
-            const skip = new Set(blacklist())
-            const targets = all.filter((id) => !skip.has(id))
-            await m.reply(`⏳ Mengirim SW ke ${targets.length} grup...`)
+            const targets = Object.keys(await sock.groupFetchAllParticipating())
+            await m.reply(`Mengirim SW ke ${targets.length} grup...`)
             let ok = 0, fail = 0
             for (const id of targets) {
                 try { await postGroupStatus(sock, id, content); ok++ } catch (e) { fail++ }
                 await new Promise((r) => setTimeout(r, 3000))   // jeda biar aman dari banned
             }
-            return m.reply(`✅ SW terkirim ke ${ok} grup${fail ? `, gagal ${fail}` : ""}${skip.size ? `\n(grup blacklist JPM dilewati)` : ""}`)
+            return m.reply(`SW terkirim ke ${ok} grup${fail ? `, gagal ${fail}` : ""}`)
         }
 
         // ----- swgc: grup ini (owner boleh tentukan grup lain: .swgc 1203xxx@g.us | teks) -----
@@ -63,6 +57,6 @@ module.exports = {
         else needAdmin(m, isOwner)
         const content = await buildContent(m, caption)
         await postGroupStatus(sock, jid, content)
-        await m.reply("✅ SW grup terkirim.")
+        await m.reply("SW grup terkirim.")
     }
 }

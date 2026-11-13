@@ -23,7 +23,7 @@ const feature = async ({ rbG, rbLib }) => {
   const handler = async (m, { text }) => {
     const target = getTarget(m, text)
     const score = Math.floor(Math.random() * 70) + 80
-    await m.reply(`╭─── ୨୧ CEK PINTAR ୨୧ ───╮\n│ ૮₍˶ᵔ ᵕ ᵔ˶₎ა estimasi IQ!\n╰────────────────────────╯\n\n୨ৎ Target: ${target.name}\n୨ৎ IQ Score: *${score}* 🧠`, null, { mentions: target.mentions })
+    await m.reply(`╭─── ୨୧ CEK PINTAR ୨୧ ───╮\n│ ૮₍˶ᵔ ᵕ ᵔ˶₎ა estimasi IQ!\n╰────────────────────────╯\n\n୨ৎ Target: ${target.name}\n୨ৎ IQ Score: *${score}*`, null, { mentions: target.mentions })
   }
   handler.help = ['cekpintar [@tag/nama]']
   handler.tags = ['fun']

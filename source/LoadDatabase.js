@@ -18,14 +18,10 @@ async function LoadDataBase(conn, m) {
     }
 
     if (typeof global.db.users[m.sender] !== 'object') global.db.users[m.sender] = {};
-    const defaultUser = { nokosSaldo: 0 };
-    for (let key in defaultUser) {
-      if (!(key in global.db.users[m.sender])) global.db.users[m.sender][key] = defaultUser[key];
-    }
 
     if (m.isGroup) {
       if (typeof global.db.groups[m.chat] !== 'object') global.db.groups[m.chat] = {};
-      const defaultGroup = { antilink: false, antilink2: false, bljpm: false, antilinkch: false, antitagch: false, antitagsw: false, antisw: false, antitoxic: false, antibokep: false, antidel: false, welcome: false };
+      const defaultGroup = { antilink: false, antilink2: false, antilinkch: false, antitagch: false, antitagsw: false, antisw: false, antitoxic: false, antibokep: false, antidel: false, welcome: false };
       for (let key in defaultGroup) {
         if (!(key in global.db.groups[m.chat])) global.db.groups[m.chat][key] = defaultGroup[key];
       }

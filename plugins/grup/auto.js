@@ -18,8 +18,8 @@ module.exports = {
         const f = FEATURES[ALIAS[command] || command]
         const st = settings()
         const val = onOff(args[0] || "")
-        if (val === null) throw new Usage(`*${f.label}* : ${st[f.key] ? "✅ Aktif" : "❌ Mati"}\n\nPakai: ${prefix}${command} on/off`)
+        if (val === null) throw new Usage(`*${f.label}* : ${st[f.key] ? "Aktif" : "Mati"}\n\nPakai: ${prefix}${command} on/off`)
         st[f.key] = val
-        await m.reply(`✅ *${f.label}* ${val ? "dinyalakan" : "dimatikan"}.`)
+        await m.reply(`*${f.label}* ${val ? "dinyalakan" : "dimatikan"}.`)
     }
 }

@@ -1,6 +1,6 @@
 const { Usage, needAdmin, gdata, settings, onOff } = require("./_lib.js")
 
-const mark = (v) => (v ? "✅ Aktif" : "❌ Mati")
+const mark = (v) => (v ? "Aktif" : "Mati")
 
 module.exports = {
     name: "gruponly",
@@ -17,8 +17,8 @@ module.exports = {
             if (val === null) throw new Usage(`*Admin Only* grup ini : ${mark(g.adminOnly)}\n\nPakai: ${prefix}adminonly on/off\nOn = cuma admin grup yang direspon bot, member biasa diabaikan total.`)
             g.adminOnly = val
             return m.reply(val
-                ? "✅ *Admin Only* dinyalakan.\nSekarang bot cuma merespon *admin grup*. Member biasa diabaikan total."
-                : "✅ *Admin Only* dimatikan.\nSemua member bisa pakai bot lagi.")
+                ? "*Admin Only* dinyalakan.\nSekarang bot cuma merespon *admin grup*. Member biasa diabaikan total."
+                : "*Admin Only* dimatikan.\nSemua member bisa pakai bot lagi.")
         }
 
         // gruponly / gruponly2 = pengaturan global, owner saja
@@ -39,7 +39,7 @@ module.exports = {
         if (val && command === "gruponly2") note = "\n⚠️ Setiap non-owner yang pakai command di PC akan *dibalas lalu diblokir*."
         if (val && command === "gruponly") note = "\nChat pribadi dari non-owner sekarang tidak direspon."
         if (val && st.grupOnly && st.grupOnly2) note += "\nℹ️ Dua-duanya aktif: yang dipakai *Group Only 2* (balas + blokir)."
-        note += "\nℹ️ Saat Nokos/Warung Mode ON, gerbang PC dilewati supaya jualan di PC tetap jalan."
-        await m.reply(`✅ *${label}* ${val ? "dinyalakan" : "dimatikan"}.${note}`)
+        note += ""
+        await m.reply(`*${label}* ${val ? "dinyalakan" : "dimatikan"}.${note}`)
     }
 }

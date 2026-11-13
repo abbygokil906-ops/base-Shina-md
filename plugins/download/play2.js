@@ -1049,7 +1049,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     await conn.sendMessage(
       m.chat,
       {
-        text: `❌ Gagal memproses lagu.\n\n> ${error?.message || 'Unknown error'}`
+        text: `Gagal memproses lagu.\n\n> ${error?.message || 'Unknown error'}`
       },
       { quoted: m }
     );

@@ -4,7 +4,7 @@ module.exports = tool({
     name: "animesearch",
     command: ["animesearch", "animecari"],
     endpoint: "search",
-    title: "🔎 Cari Anime",
+    title: "Cari Anime",
     desc: "Cari / jelajahi katalog anime (60 judul per halaman)",
     usage: "<judul> [page=2] [genre=ID] [key=value]",
     example: "naruto",

@@ -4,7 +4,7 @@ module.exports = tool({
     name: "animeschedule",
     command: ["animeschedule", "animejadwal"],
     endpoint: "schedule",
-    title: "📅 Jadwal Rilis",
+    title: "Jadwal Rilis",
     desc: "Jadwal rilis anime per hari",
     usage: "[hari]",
     example: "senin",

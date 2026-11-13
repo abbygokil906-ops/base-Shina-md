@@ -8,37 +8,11 @@
     "autoread": false,
     "autotyping": false,
     "autoreadsw": false,
-    "nokos": {
-      "mode": false,
-      "channelId": "",
-      "namaToko": "",
-      "namaOwner": ""
-    },
-    "warung": {
-      "mode": false,
-      "channelId": "",
-      "namaToko": "",
-      "gwApiKey": "",
-      "feeBearer": ""
-    },
     "jutek": true,
     "adzan": {
       "chats": {},
       "off": {}
     }
-  },
-  "nokos": {
-    "orders": {},
-    "deposits": {},
-    "lastSlot": "",
-    "maint": null
-  },
-  "warung": {
-    "orders": {},
-    "panels": [],
-    "scripts": [],
-    "price": {},
-    "seq": 0
   },
   "guilds": {}
 }
