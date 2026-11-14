@@ -6,7 +6,7 @@ module.exports = tool({
     endpoint: "tiktok-checker",
     desc: "Cek akun TikTok",
     usage: "<username>",
-    example: "fuyuha",
+    example: "nihilux",
     needs: "text",
     params: ({ text }) => ({ username: text.replace(/^@/, "") })
 })

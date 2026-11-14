@@ -10,5 +10,5 @@ module.exports = tool({
     needs: "text",
     output: "audio",
     timeout: 300000,
-    params: pipe(["prompt", "title", "style", "gender"], { min: 1, defaults: { title: "Fuyuha Song", style: "anime", gender: "male" } })
+    params: pipe(["prompt", "title", "style", "gender"], { min: 1, defaults: { title: "Nihilux Song", style: "anime", gender: "male" } })
 })

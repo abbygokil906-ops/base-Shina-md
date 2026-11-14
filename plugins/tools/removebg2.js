@@ -30,7 +30,7 @@ module.exports = {
                 document: src,
                 mimetype: isImg ? mime : "application/octet-stream",
                 fileName: isImg ? "removebg.png" : "removebg.bin",
-                caption: "✅ Background berhasil dihapus"
+                caption: "Background berhasil dihapus"
             }, { quoted: m })
             await sock.sendMessage(m.chat, { react: { text: "✅", key: m.key } }).catch(() => {})
         } catch (e) {

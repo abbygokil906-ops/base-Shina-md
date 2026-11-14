@@ -1,121 +1,122 @@
-import axios from "axios";
-import crypto from "crypto";
+const axios = require("axios")
+const crypto = require("crypto")
 
-const BASE = "https://www.alightpro.my.id";
+const BASE = "https://www.alightpro.my.id"
+const requestCooldown = new Map()
+const COOLDOWN_MS = 30000
+
 const http = axios.create({
-  baseURL: BASE,
-  headers: {
-    "accept": "*/*",
-    "accept-language": "id-ID,id;q=0.9",
-    "referer": `${BASE}/`,
-    "user-agent": "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 Chrome/141 Mobile Safari/537.36",
-  },
-});
+    baseURL: BASE,
+    timeout: 30000,
+    headers: {
+        accept: "*/*",
+        "accept-language": "id-ID,id;q=0.9",
+        referer: `${BASE}/`,
+        "user-agent": "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 Chrome/141 Mobile Safari/537.36"
+    }
+})
 
-let _cookie = "";
-http.interceptors.request.use(cfg => { if (_cookie) cfg.headers["cookie"] = _cookie; return cfg; });
-http.interceptors.response.use(res => {
-  const sc = res.headers["set-cookie"];
-  if (sc) _cookie = sc.map(c => c.split(";")[0]).join("; ");
-  return res;
-});
+let cookie = ""
 
-async function sha256(str) {
-  const buf = Buffer.from(str, "utf8");
-  return crypto.createHash("sha256").update(buf).digest("hex");
-}
+http.interceptors.request.use((config) => {
+    if (cookie) config.headers.cookie = cookie
+    return config
+})
 
-async function solvePoW(sessionId, nonce, email, action, difficulty = "0000") {
-  const prefix = `${sessionId}:${nonce}:${email.toLowerCase()}:${action}:`;
-  for (let i = 0; i < 500000; i++) {
-    const hash = await sha256(prefix + i);
-    if (hash.startsWith(difficulty)) return String(i);
-  }
-  return String(Date.now());
+http.interceptors.response.use((response) => {
+    const setCookie = response.headers["set-cookie"]
+    if (setCookie) cookie = setCookie.map((item) => item.split(";")[0]).join("; ")
+    return response
+})
+
+const sha256 = (value) =>
+    crypto.createHash("sha256").update(String(value), "utf8").digest("hex")
+
+function solvePoW(sessionId, nonce, email, action, difficulty = "0000") {
+    if (!/^[0-9a-f]{1,8}$/i.test(difficulty)) {
+        throw new Error("Tingkat PoW dari server tidak valid atau terlalu tinggi.")
+    }
+
+    const prefix = `${sessionId}:${nonce}:${email.toLowerCase()}:${action}:`
+    const maxAttempts = 2000000
+
+    for (let i = 0; i < maxAttempts; i++) {
+        if (sha256(prefix + i).startsWith(difficulty)) return String(i)
+    }
+
+    throw new Error("PoW belum menemukan hasil. Silakan coba lagi.")
 }
 
 async function getSession() {
-  const { data } = await http.get("/api/session", {
-    headers: { "x-requested-with": "XMLHttpRequest" },
-  });
-  if (!data.status || !data.token || !data.nonce)
-    throw new Error("Session invalid: " + JSON.stringify(data));
-  return data;
+    const { data } = await http.get("/api/session", {
+        headers: { "x-requested-with": "XMLHttpRequest" }
+    })
+
+    if (!data?.status || !data.token || !data.nonce || !data.sessionId) {
+        throw new Error("Sesi layanan tidak valid.")
+    }
+
+    return data
 }
 
 async function request(action, body) {
-  const sess = await getSession();
-  const { token, nonce, sessionId, difficulty = "0000" } = sess;
-
-  process.stderr.write(`Solving PoW (difficulty: ${difficulty})...\n`);
-  const pow = await solvePoW(sessionId, nonce, body.email, action, difficulty);
-  process.stderr.write(`PoW solved: ${pow}\n`);
-
-  const { data } = await http.post("/api/alight-motion",
-    { action, ...body },
-    {
-      headers: {
-        "content-type": "application/json",
-        "x-requested-with": "XMLHttpRequest",
-        "x-amprem-token": token,
-        "x-amprem-nonce": nonce,
-        "x-amprem-pow": pow,
-      },
+    if (!["send", "verify"].includes(action)) {
+        throw new Error("Aksi tidak dikenal.")
     }
-  );
-  return data;
+
+    const session = await getSession()
+    const difficulty = session.difficulty || "0000"
+    const pow = solvePoW(
+        session.sessionId,
+        session.nonce,
+        body.email,
+        action,
+        difficulty
+    )
+
+    const { data } = await http.post(
+        "/api/alight-motion",
+        { action, ...body },
+        {
+            headers: {
+                "content-type": "application/json",
+                "x-requested-with": "XMLHttpRequest",
+                "x-amprem-token": session.token,
+                "x-amprem-nonce": session.nonce,
+                "x-amprem-pow": pow
+            }
+        }
+    )
+
+    return data
 }
 
 async function getStats() {
-  const [a, b] = await Promise.all([
-    http.get("/api/stats"),
-    http.get("/api/stats/recent"),
-  ]);
-  return { stats: a.data, recent: b.data };
+    const [stats, recent] = await Promise.all([
+        http.get("/api/stats"),
+        http.get("/api/stats/recent")
+    ])
+
+    return { stats: stats.data, recent: recent.data }
 }
 
-export {
-  http,
-  sha256,
-  solvePoW,
-  getSession,
-  request,
-  getStats,
-  BASE,
-  _cookie
-};
+function validEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || ""))
+}
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  async function main() {
-    const [,, cmd, ...args] = process.argv;
-    const usage = `Usage:
-  node amprem.js send <email>
-  node amprem.js verify <email> <oob_link>
-  node amprem.js stats`;
-
+function validVerificationLink(value) {
     try {
-      if (cmd === "send") {
-        const [email] = args;
-        if (!email) throw new Error("Missing email");
-        console.log(JSON.stringify(await request("send", { email }), null, 2));
-
-      } else if (cmd === "verify") {
-        const [email, link] = args;
-        if (!email || !link) throw new Error("Missing email or link");
-        console.log(JSON.stringify(await request("verify", { email, link }), null, 2));
-
-      } else if (cmd === "stats") {
-        console.log(JSON.stringify(await getStats(), null, 2));
-
-      } else {
-        console.log(usage);
-        process.exit(1);
-      }
-    } catch (e) {
-      console.error("Error:", e.response?.data ?? e.message);
-      process.exit(1);
+        const url = new URL(value)
+        return url.protocol === "https:" && !url.username && !url.password
+    } catch {
+        return false
     }
-  }
+}
 
-  main();
+module.exports = {
+    request,
+    getStats,
+    checkCooldown,
+    validEmail,
+    validVerificationLink
 }

@@ -6,7 +6,7 @@ module.exports = tool({
     endpoint: "shortlink",
     desc: "Perpendek link (alias opsional)",
     usage: "<link> [alias]",
-    example: "https://example.com/halaman-panjang fuyuha",
+    example: "https://example.com/halaman-panjang nihilux",
     needs: "text",
     params: urlPlus("custom", undefined)
 })

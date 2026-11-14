@@ -86,7 +86,7 @@ function textOf(json) {
     let payload = json.result ?? json.data
     if (payload === undefined) { const { status, success, creator, author, ok, ...rest } = json; payload = rest }
     const t = typeof payload === "string" ? payload : fmt(payload)
-    return (t || "✅ Selesai").slice(0, 3500)
+    return (t || "Selesai").slice(0, 3500)
 }
 
 /* ---------- kirim hasil ---------- */
@@ -101,7 +101,7 @@ async function sendMedia(sock, m, { kind, src, caption, fileName, mimetype }) {
 async function deliver(sock, m, def, res) {
     if (res.buffer) {                                   // API membalas file langsung
         const kind = /^image\//.test(res.type) ? "image" : /^video\//.test(res.type) ? "video" : /^audio\//.test(res.type) ? "audio" : "document"
-        return sendMedia(sock, m, { kind, src: res.buffer, caption: "✅ Selesai", fileName: `${def.name}.${EXT[res.type] || "bin"}`, mimetype: res.type })
+        return sendMedia(sock, m, { kind, src: res.buffer, caption: "Selesai", fileName: `${def.name}.${EXT[res.type] || "bin"}`, mimetype: res.type })
     }
     const out = def.output || "text"
     if (out === "profile") {                            // foto profil + data profil
@@ -109,7 +109,7 @@ async function deliver(sock, m, def, res) {
         const pic = findPic(payload)
         let text = textOf(res.json)
         if (pic) {
-            text = text.split("\n").filter((l) => !l.includes(pic)).join("\n") || "✅ Selesai"   // link foto tidak perlu tampil di caption
+            text = text.split("\n").filter((l) => !l.includes(pic)).join("\n") || "Selesai"   // link foto tidak perlu tampil di caption
             try {
                 if (text.length <= 1000) return await sock.sendMessage(m.chat, { image: { url: pic }, caption: text }, { quoted: m })
                 await sock.sendMessage(m.chat, { image: { url: pic } }, { quoted: m })
@@ -122,7 +122,7 @@ async function deliver(sock, m, def, res) {
         const url = findUrl(payload) || findUrl(res.json)
         if (url) {
             const kind = out === "auto" ? kindByUrl(url) : out
-            const title = payload && typeof payload === "object" && typeof payload.title === "string" ? `*${payload.title}*` : "✅ Selesai"
+            const title = payload && typeof payload === "object" && typeof payload.title === "string" ? `*${payload.title}*` : "Selesai"
             const fileName = decodeURIComponent(url.split("?")[0].split("/").pop() || "") || `${def.name}.bin`
             return sendMedia(sock, m, { kind, src: { url }, caption: title, fileName })
         }
