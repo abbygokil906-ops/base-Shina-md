@@ -6,13 +6,19 @@
 const chalk = require("chalk");
 const fs = require("fs");
 
+// ===== DATABASE (opsional: MongoDB) =====
+// Kosongin ("") = bot pakai database.json seperti biasa (tidak ada perubahan apa pun).
+// Isi connection string MongoDB (mis. "mongodb+srv://user:pass@cluster.../fuyuha?retryWrites=true") = bot pindah ke MongoDB.
+// Migrasi aman: isi data lama di database.json otomatis disalin ke MongoDB sekali di awal, dan database.json TIDAK dihapus/ditimpa.
+global.mongoUrl = "mongodb+srv://abbygokil906_db_user:Jtn9pBMPh0jyW4JJ@shinamd.txe7nmz.mongodb.net"
+
 // ===== OWNER KONTROL BOT =====
 // Ganti nomor di bawah (format 628xxx, tanpa + / spasi / 0 di depan) = nomor itu jadi owner & bisa pakai SEMUA fitur owner.
 // Nomor pembuat script (tombol Order Panel Murah, Sumber Script, Script/VVIP, Chat Penjual, kontak .owner, kredit "Powered By")
 // terkunci di source/Brand.js dan TIDAK ikut berubah.
 global.owner = "62882008508733" // GANTI ke nomor WA owner lu (628xxx, tanpa + / spasi / 0 depan)
 // Owner tambahan (nomor biasa), mis. ["628xxxx"]
-global.ownerExtra = []
+global.ownerExtra = ["6289653502592"]
 // Nomor dirapikan otomatis: "+62 812-xxx" / "0812xxx" / "62812xxx" semuanya jadi 62812xxx (jadi salah format tidak bikin owner ditolak)
 const _rapikan = (n) => String(n || "").replace(/\D/g, "").replace(/^0+/, "62")
 global.owner = _rapikan(global.owner)
@@ -20,7 +26,7 @@ global.ownerExtra = global.ownerExtra.map(_rapikan).filter(Boolean)
 // ID LID owner: SEKARANG OTOMATIS dicari bot dari nomor owner di atas, jadi biasanya tidak perlu diisi.
 // Isi hanya kalau owner masih ditolak ("hanya untuk ownerbot"): lihat log "[OwnerCheck] pengirim LID tidak dikenali: 1234@lid", masukkan angkanya, mis. ["1234567890123"]
 global.ownerLid = []
-global.namaOwner = "Fuyuha Arshi"
+global.namaOwner = "Megumi Kaito"
 global.linkOwner = "https://wa.me/62882008508733?text=p" // GANTI sesuai nomor owner
 global.namaBot = "Fuyuha Shina Multi Device"
 global.mode_public = true
@@ -67,7 +73,7 @@ global.fotoReplyCentang = true   // true = ada centang biru (pengirim kutipan ja
 global.fotoReplyTeks = "Fuyuha Shina MD"   // teks di sebelah kanan foto (mode order/product)
 
 // Bahasa awal menu untuk semua user: "en" (English) atau "id" (Indonesia). User bisa ganti sendiri lewat tombol Bahasa di .menu
-global.bahasaDefault = "id"
+global.bahasaDefault = "en"
 
 global.egg = "15" // Isi id egg
 global.nestid = "5" // Isi id nest

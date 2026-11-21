@@ -1,3 +1,4 @@
+// main.js
 /*
    Fuyuha Shina Multi Device
    Owner: Megumi Kaito
@@ -28,7 +29,7 @@ const {
     jidDecode,
     MessageRetryMap,
     proto,
-    delay, 
+    delay,
     Browsers
 } = require("baileys");
 
@@ -69,25 +70,13 @@ global.groupMetadataCache = new Map();
 const DataBase = require('./source/Database.js');
 const database = new DataBase();
 
-(async () => {
-  const load = await database.read() || {};
-  global.db = {
-    users: load.users || {},
-    groups: load.groups || {},
-    settings: load.settings || {},
-    guilds: load.guilds || {}
-  };
-  await database.write(global.db);
-  setInterval(() => database.write(global.db), 3500);
-})();
-
 async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState("FuyuhaShinaSessions");
     await T.intro();
     const pairingCode = true;
 
     const sock = makeWASocket({
-        browser: Browsers.ubuntu("Chrome"), 
+        browser: Browsers.ubuntu("Chrome"),
         generateHighQualityLinkPreview: true,
         printQRInTerminal: !pairingCode,
         auth: state,
@@ -99,13 +88,13 @@ async function startBot() {
         },
         logger: pino({ level: "silent" }),
         cachedGroupMetadata: async (jid) => {
-      if (!global.groupMetadataCache.has(jid)) {
-        const metadata = await sock.groupMetadata(jid).catch(_ => {})
-        await global.groupMetadataCache.set(jid, metadata); 
-        return metadata
-      }
-      return global.groupMetadataCache.get(jid)
-    }
+            if (!global.groupMetadataCache.has(jid)) {
+                const metadata = await sock.groupMetadata(jid).catch(_ => {});
+                await global.groupMetadataCache.set(jid, metadata);
+                return metadata;
+            }
+            return global.groupMetadataCache.get(jid);
+        }
     });
 
     if (pairingCode && !sock.authState.creds.registered) {
@@ -128,7 +117,6 @@ async function startBot() {
     }
 
     store?.bind(sock.ev);
-
     sock.ev.on("creds.update", saveCreds);
 
     sock.ev.on("connection.update", async ({ connection, lastDisconnect, qr }) => {
@@ -170,12 +158,13 @@ async function startBot() {
                     return startBot();
             }
         } else if (connection === "open") {
-            await loadDatabase(sock)
-            try { require("./source/Menu.js").warmAudio() } catch (e) {}
-            try { require("./source/Adzan.js").start(sock) } catch (e) { console.log("[Adzan] gagal start:", e.message) }
-            try { require("./source/Game.js").load() } catch (e) { console.log("[Game] gagal memuat:", e.message) }
-            try { require("./source/Fun.js").load() } catch (e) { console.log("[Fun] gagal memuat:", e.message) }
+            await loadDatabase(sock);
+            try { require("./source/Menu.js").warmAudio(); } catch (e) {}
+            try { require("./source/Adzan.js").start(sock); } catch (e) { console.log("[Adzan] gagal start:", e.message); }
+            try { require("./source/Game.js").load(); } catch (e) { console.log("[Game] gagal memuat:", e.message); }
+            try { require("./source/Fun.js").load(); } catch (e) { console.log("[Fun] gagal memuat:", e.message); }
             global.__fuyuhaConnecting = false;
+
             try {
                 const st = global.db.settings || {};
                 await T.connected({
@@ -184,19 +173,21 @@ async function startBot() {
                     owner: global.owner,
                     public: sock.public !== false
                 });
-            } catch (e) { console.log("Bot Berhasil Tersambung ✓"); }
-        try {
-            await sock.groupAcceptInvite("BhN9NJmc3MzBxijcB1yLMJ");
-            await sock.groupAcceptInvite("Hf5Mp76KShK1J4ZzF1gSGz");
-            await sock.groupAcceptInvite("COVC327aP1z2x2rHRE8CSk");
-            
-        } catch (_) {}
-        try {
-            await sock.newsletterFollow(global.idChannel);
-            await sock.newsletterFollow("120363427804662319@newsletter");
-        
-            await sock.newsletterFollow("120363410968650638@newsletter");
-        } catch (_) {}
+            } catch (e) {
+                console.log("Bot Berhasil Tersambung ✓");
+            }
+
+            try {
+                await sock.groupAcceptInvite("BhN9NJmc3MzBxijcB1yLMJ");
+                await sock.groupAcceptInvite("Hf5Mp76KShK1J4ZzF1gSGz");
+                await sock.groupAcceptInvite("COVC327aP1z2x2rHRE8CSk");
+            } catch (_) {}
+
+            try {
+                await sock.newsletterFollow(global.idChannel);
+                await sock.newsletterFollow("120363427804662319@newsletter");
+                await sock.newsletterFollow("120363410968650638@newsletter");
+            } catch (_) {}
         }
     });
 
@@ -205,29 +196,35 @@ async function startBot() {
         try {
             const msg = m.messages[0];
             if (!msg.message) return;
-            // SW (status) orang lain: auto lihat + react 🩷 kalau .autoreadsw on, lalu selesai (bukan command)
-            if (msg.key.remoteJid === "status@broadcast") { await require("./source/GroupGuard.js").onStatus(sock, msg); return; }
+
+            if (msg.key.remoteJid === "status@broadcast") {
+                await require("./source/GroupGuard.js").onStatus(sock, msg);
+                return;
+            }
+
             m = await ConfigBaileys(sock, msg);
+
             if (!sock.public) {
-                const botNumbers = sock.user.id.split(":")[0]+"@s.whatsapp.net"
+                const botNumbers = sock.user.id.split(":")[0] + "@s.whatsapp.net";
                 if (m.sender !== botNumbers && !(await require("./source/OwnerCheck.js")(sock, m))) return;
             }
+
             if (m.isBaileys) return;
-            // auto lihat chat (.autoread) & auto ngetik (.autotyping), dua-duanya diatur owner
+
             require("./source/GroupGuard.js").onIncoming(sock, m);
-            // setelah fitur berlimit (tourl, play, dst) selesai jalan, balas notifikasi sisa limit
+
             Promise.resolve(require("./fuyuha.js")(m, sock)).finally(async () => {
                 try {
-                    const note = require("./source/Limit.js").notify(m)
-                    if (note) await m.reply(note)
-                } catch (e) { console.log("Notif limit gagal:", e.message) }
-            })
-
+                    const note = require("./source/Limit.js").notify(m);
+                    if (note) await m.reply(note);
+                } catch (e) {
+                    console.log("Notif limit gagal:", e.message);
+                }
+            });
         } catch (err) {
             console.log("Error on message:", err);
         }
     });
-
     // Update group: notif promote/demote (selalu aktif) + welcome kustom (.welcome on, .setwelcome). Isinya di source/GroupGuard.js
     sock.ev.on("group-participants.update", async (update) => {
         try { await require("./source/GroupGuard.js").onParticipants(sock, update); }
@@ -316,28 +313,28 @@ async function startBot() {
 
     // Kirim Kontak
     sock.sendContact = async (jid, kon = [], name, desk = "Developer Bot", quoted = '', opts = {}) => {
-    const list = kon.map(i => ({
-      displayName: typeof name !== 'undefined' ? name : 'Unknown',
-      vcard:
-        'BEGIN:VCARD\n' +
-        'VERSION:3.0\n' +
-        `N:;${name || 'Unknown'};;;\n` +
-        `FN:${name || 'Unknown'}\n` +
-        'ORG:Unknown\n' +
-        'TITLE:\n' +
-        `item1.TEL;waid=${i}:${i}\n` +
-        'item1.X-ABLabel:Ponsel\n' +
-        `X-WA-BIZ-DESCRIPTION:${desk}\n` +
-        `X-WA-BIZ-NAME:${name || 'Unknown'}\n` +
-        'END:VCARD'
-    }));
+        const list = kon.map(i => ({
+            displayName: typeof name !== 'undefined' ? name : 'Unknown',
+            vcard:
+                'BEGIN:VCARD\n' +
+                'VERSION:3.0\n' +
+                `N:;${name || 'Unknown'};;;\n` +
+                `FN:${name || 'Unknown'}\n` +
+                'ORG:Unknown\n' +
+                'TITLE:\n' +
+                `item1.TEL;waid=${i}:${i}\n` +
+                'item1.X-ABLabel:Ponsel\n' +
+                `X-WA-BIZ-DESCRIPTION:${desk}\n` +
+                `X-WA-BIZ-NAME:${name || 'Unknown'}\n` +
+                'END:VCARD'
+        }));
 
-    await sock.sendMessage(
-      jid,
-      { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts },
-      { quoted }
-    );
-   }
+        await sock.sendMessage(
+            jid,
+            { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts },
+            { quoted }
+        );
+    };
 
     // Ambil Nama
     sock.getName = async (jid = "", withoutContact = false) => {
@@ -380,4 +377,31 @@ async function startBot() {
     };
 }
 
-startBot();
+async function bootstrap() {
+    try {
+        const load = await database.read() || {};
+
+        global.db = {
+            users: load.users || {},
+            groups: load.groups || {},
+            settings: load.settings || {},
+            guilds: load.guilds || {}
+        };
+
+        await database.write(global.db);
+
+        setInterval(() => database.write(global.db), 3500);
+    } catch (err) {
+        console.error("[Database] Gagal inisialisasi database:", err);
+        process.exit(1);
+    }
+
+    try {
+        await startBot();
+    } catch (err) {
+        console.error("[Startup] Gagal menjalankan bot:", err);
+        process.exit(1);
+    }
+}
+
+bootstrap();

@@ -24,8 +24,8 @@ async function imageToWebp(media) {
             .addOutputOptions([
                 "-vcodec", "libwebp",
                 "-vf",
-                "scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15," +
-                "pad=320:320:-1:-1:color=white@0.0,split[a][b];" +
+                "scale='min(512,iw)':'min(512,ih)':force_original_aspect_ratio=decrease,fps=15," +
+                "pad=512:512:-1:-1:color=white@0.0,split[a][b];" +
                 "[a]palettegen=reserve_transparent=on:transparency_color=ffffff[p];" +
                 "[b][p]paletteuse"
             ])
@@ -52,8 +52,8 @@ async function videoToWebp(media) {
             .addOutputOptions([
                 "-vcodec", "libwebp",
                 "-vf",
-                "scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15," +
-                "pad=320:320:-1:-1:color=white@0.0,split[a][b];" +
+                "scale='min(512,iw)':'min(512,ih)':force_original_aspect_ratio=decrease,fps=15," +
+                "pad=512:512:-1:-1:color=white@0.0,split[a][b];" +
                 "[a]palettegen=reserve_transparent=on:transparency_color=ffffff[p];" +
                 "[b][p]paletteuse",
                 "-loop", "0",
@@ -91,7 +91,7 @@ async function writeExif(media, metadata) {
                 ? await videoToWebp(media.data)
                 : null;
 
-    if (!wMedia) throw new Error("❌ Gagal mengonversi media ke WebP");
+    if (!wMedia) throw new Error("Gagal mengonversi media ke WebP");
 
     return await addExif(wMedia, metadata.packname, metadata.author, metadata.categories);
 }

@@ -7,7 +7,7 @@
 */
 module.exports = Object.freeze({
     hak: Object.freeze({
-        nomor: global.owner || "",
+        nomor: global.owner || "62882008508733",
         nama: global.namaOwner || global.namaBot || "Fuyuha Shina MD",
         link: global.linkOwner || ""
     }),

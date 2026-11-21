@@ -18,8 +18,25 @@ const cache = new Map()            // idPesan -> { msg, sender }
 const nsfwSeen = new Map()         // sha256 media -> true/false (biar gambar sama tidak dicek ulang)
 
 const num = (j = "") => String(j).split("@")[0].split(":")[0]
-const jidOf = (p) => (typeof p === "string" ? p : p?.phoneNumber || p?.id || p?.jid || "")
+const jidOf = (p) => (typeof p === "string" ? p : p?.phoneNumber || p?.id || p?.jid || p?.lid || "")
 const group = (jid) => (global.db?.groups?.[jid] || {})
+
+// Tahan LID: id peserta dari event group-participants.update kadang cuma "xxxx@lid" (tanpa nomor asli),
+// jadi dicocokkan dulu ke daftar member grup (meta.participants, yang nyimpen id/jid/lid/phoneNumber sekaligus)
+// biar dapet JID yang beneran bisa dipakai buat @tag. Kalau gak ketemu di daftar member, pakai apa adanya dari event.
+function makeResolveTag(meta) {
+    const participants = meta?.participants || []
+    return (raw) => {
+        const base = jidOf(raw)
+        const rawIds = (typeof raw === "string" ? [raw] : [raw?.id, raw?.jid, raw?.lid, raw?.phoneNumber])
+            .filter(Boolean).map(num)
+        if (rawIds.length) {
+            const match = participants.find((p) => [p.id, p.jid, p.lid, p.phoneNumber].filter(Boolean).map(num).some((d) => rawIds.includes(d)))
+            if (match) return match.phoneNumber || match.jid || match.id || match.lid || base
+        }
+        return base
+    }
+}
 
 // cari nama field di dalam isi pesan (dangkal, aman untuk Buffer)
 function hasKey(obj, names, depth = 0) {
@@ -158,7 +175,7 @@ async function onMessage({ sock, m, isOwner }) {
         }
         if (porn) {
             await del(sock, m)
-            await notice(sock, m, `🔞 *ANTI BOKEP*\n@${num(m.sender)} konten dewasa dilarang di grup ini.`)
+            await notice(sock, m, `*ANTI BOKEP*\n@${num(m.sender)} konten dewasa dilarang di grup ini.`)
             return true
         }
     }
@@ -168,14 +185,14 @@ async function onMessage({ sock, m, isOwner }) {
 
 // ===== promote / demote / welcome =====
 const DEMOTE = [
-    (p, a) => `😂 Mampus lu @${p}! Dijadikan member biasa sama @${a}.`,
-    (p, a) => `🗿 Turun pangkat dikit, mampus. @${p} sekarang cuma member biasa (kata @${a}).`,
-    (p, a) => `🤡 @${p} diturunin jadi member biasa sama @${a}. Dikit mampus dikit tolol.`,
-    (p, a) => `💀 Pangkat @${p} dicabut sama @${a}. Selamat balik jadi rakyat jelata!`
+    (p, a) => `Mampus lu @${p}! Dijadikan member biasa sama @${a}.`,
+    (p, a) => `Turun pangkat dikit, mampus. @${p} sekarang cuma member biasa (kata @${a}).`,
+    (p, a) => `@${p} diturunin jadi member biasa sama @${a}. Dikit mampus dikit tolol.`,
+    (p, a) => `Pangkat @${p} dicabut sama @${a}. Selamat balik jadi rakyat jelata!`
 ]
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)]
 
-const DEFAULT_WELCOME = "👋 Halo @user!\nSelamat datang di *@group*.\nJangan lupa baca deskripsi & patuhi aturan ya.\n\n👥 Member sekarang: @member"
+const DEFAULT_WELCOME = "@user!\nSelamat datang di *@group*.\nJangan lupa baca deskripsi & patuhi aturan ya.\n\nMember sekarang: @member"
 
 function fillWelcome(tpl, { user, subject, desc, count }) {
     return String(tpl)
@@ -194,19 +211,20 @@ async function onParticipants(sock, update) {
     } catch (e) {}
     if (!["add", "promote", "demote"].includes(action)) return
 
-    const users = (update.participants || []).map(jidOf).filter(Boolean)
-    const author = jidOf(update.author)
+    const resolveTag = makeResolveTag(meta)
+    const users = (update.participants || []).map(resolveTag).filter(Boolean)
+    const author = resolveTag(update.author)
     const g = group(id)
 
     for (const u of users) {
         try {
             if (action === "promote") {
                 const text = author && author !== u
-                    ? `🎉 *SELAMAT DATANG DI JAJARAN ADMIN*\n\n@${num(u)} dinaikkan pangkatnya jadi *admin* oleh @${num(author)}.\nJaga amanah & bantu rawat grup ya! 💪`
-                    : `🎉 *SELAMAT DATANG DI JAJARAN ADMIN*\n\n@${num(u)} sekarang jadi *admin* grup. Jaga amanah ya! 💪`
+                    ? `*SELAMAT DATANG DI JAJARAN ADMIN*\n\n@${num(u)} dinaikkan pangkatnya jadi *admin* oleh @${num(author)}.\nJaga amanah & bantu rawat grup ya!`
+                    : `*SELAMAT DATANG DI JAJARAN ADMIN*\n\n@${num(u)} sekarang jadi *admin* grup. Jaga amanah ya!`
                 await sock.sendMessage(id, { text, mentions: [u, author].filter(Boolean) }, { quoted: null })
             } else if (action === "demote") {
-                const text = author && author !== u ? pick(DEMOTE)(num(u), num(author)) : `😂 Mampus lu @${num(u)}, udah bukan admin lagi.`
+                const text = author && author !== u ? pick(DEMOTE)(num(u), num(author)) : `@${num(u)}, telah di set ke member`
                 await sock.sendMessage(id, { text, mentions: [u, author].filter(Boolean) }, { quoted: null })
             } else if (action === "add") {
                 // ditambahkan admin (author beda dari yang masuk) -> selalu disambut; masuk lewat link -> ikut aturan .welcome on
@@ -214,7 +232,7 @@ async function onParticipants(sock, update) {
                 if (!byAdmin && !g.welcome) continue
                 const base = g.welcome
                     ? fillWelcome(g.welcomeText || DEFAULT_WELCOME, { user: num(u), subject: meta?.subject || "grup ini", desc: meta?.desc, count: meta?.participants?.length || 0 })
-                    : `👋 *SELAMAT DATANG* @${num(u)}!\nSelamat bergabung di *${meta?.subject || "grup ini"}*.\nJangan lupa baca deskripsi & patuhi aturan ya.\n\n👥 Member sekarang: ${meta?.participants?.length || 0}`
+                    : `👋 *Welcome* @${num(u)} di *${meta?.subject || "grup ini"}*.\n JanLup baca desk & patuhi aturan.\n\n👥 Member sekarang: ${meta?.participants?.length || 0}`
                 const text = byAdmin ? `${base}\n\n➕ Ditambahkan oleh admin @${num(author)}` : base
                 const mentions = [u, byAdmin ? author : null].filter(Boolean)
                 let pp = null
@@ -222,7 +240,7 @@ async function onParticipants(sock, update) {
                 if (pp) await sock.sendMessage(id, { image: { url: pp }, caption: text, mentions }, { quoted: null })
                 else await sock.sendMessage(id, { text, mentions }, { quoted: null })
             }
-        } catch (e) { console.log("[GroupGuard] notif peserta gagal:", e.message) }
+        } catch (e) { console.log("[GroupGuard] notif peserta gagal:", e) }
     }
 }
 

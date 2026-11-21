@@ -394,8 +394,8 @@ case "button": case "buttonon": case "buttonoff": case "buttonof": case "tombol"
     }
     M.setButtons(m.sender, a === "on")
     return m.reply(a === "on"
-        ? (en ? "✅ Button *ON*. Matikan: .button off" : "✅ Button *ON*. Matikan: .button off")
-        : (en ? "✅ Button *OFF*. .menu = foto + teks. Nyalakan: .button on".replace("Nyalakan", "Turn on") : "✅ Button *OFF*. .menu jadi foto + teks. Nyalakan: .button on"))
+        ? (en ? "Button *ON*. Matikan: .button off" : "Button *ON*. Matikan: .button off")
+        : (en ? "Button *OFF*. .menu = foto + teks. Nyalakan: .button on".replace("Nyalakan", "Turn on") : "Button *OFF*. .menu jadi foto + teks. Nyalakan: .button on"))
 }
 break
 
@@ -554,7 +554,7 @@ case "kik": {
     try {
         await sock.groupParticipantsUpdate(m.chat, [target], "remove");
         return sock.sendMessage(m.chat, {
-            text: `✅ Berhasil mengeluarkan @${target.split("@")[0]}`,
+            text: `Berhasil mengeluarkan @${target.split("@")[0]}`,
             mentions: [target]
         }, { quoted: m });
     } catch (err) {
@@ -624,7 +624,7 @@ case "tagall": {
         if (!members.length) return m.reply("Gagal mendapatkan daftar anggota grup. Coba lagi.");
         const num = (j) => String(j).split("@")[0].split(":")[0];
         const pesan = text || m.quoted?.text || "Tidak ada pesan";
-        const body = `*📢 TAG ALL*\n👥 ${members.length} anggota\n💬 ${pesan}\n\n` + members.map(j => `• @${num(j)}`).join("\n");
+        const body = `*TAG ALL*\n ${members.length} anggota\n💬 ${pesan}\n\n` + members.map(j => `• @${num(j)}`).join("\n");
         await sock.sendMessage(m.chat, { text: body, mentions: members }, { quoted: m });
     } catch (error) {
         console.error("Error sending tagall message:", error);
@@ -640,16 +640,16 @@ case "welcome": {
 
     if (text === "on") {
         if (global.db.settings.welcome) 
-            return m.reply("Welcome sudah aktif ✅");
+            return m.reply("Welcome sudah aktif");
         global.db.settings.welcome = true;
-        return m.reply("Berhasil menyalakan welcome ✅");
+        return m.reply("Berhasil menyalakan welcome");
     }
 
     if (text === "off") {
         if (!global.db.settings.welcome) 
-            return m.reply("Welcome sudah tidak aktif ✅");
+            return m.reply("Welcome sudah tidak aktif");
         global.db.settings.welcome = false;
-        return m.reply("Berhasil mematikan welcome ✅");
+        return m.reply("Berhasil mematikan welcome");
     }
 }
 break;
@@ -664,13 +664,13 @@ case "antilink": {
         if (group.antilink) return m.reply(`Antilink di grup ini sudah aktif!`);
         group.antilink = true;
         group.antilink2 = false;
-        return m.reply(`Berhasil menyalakan antilink di grup ini ✅`);
+        return m.reply(`Berhasil menyalakan antilink di grup ini`);
     }
 
     if (text === "off") {
         if (!group.antilink) return m.reply(`Antilink di grup ini sudah tidak aktif!`);
         group.antilink = false;
-        return m.reply(`Berhasil mematikan antilink di grup ini ✅`);
+        return m.reply(`Berhasil mematikan antilink di grup ini`);
     }
 }
 break;
@@ -685,13 +685,13 @@ case "antilink2": {
         if (group.antilink2) return m.reply(`Antilink2 di grup ini sudah aktif!`);
         group.antilink2 = true;
         group.antilink = false;
-        return m.reply(`Berhasil menyalakan antilink2 di grup ini ✅`);
+        return m.reply(`Berhasil menyalakan antilink2 di grup ini`);
     }
 
     if (text === "off") {
         if (!group.antilink2) return m.reply(`Antilink2 di grup ini sudah tidak aktif!`);
         group.antilink2 = false;
-        return m.reply(`Berhasil mematikan antilink2 di grup ini ✅`);
+        return m.reply(`Berhasil mematikan antilink2 di grup ini`);
     }
 }
 break;
@@ -707,7 +707,7 @@ case "self": {
         sock.public = global.mode_public
         let newData = data.replace(/global\.mode_public\s*=\s*(true|false)/, "global.mode_public = true");
         fs.writeFileSync(path, newData, "utf-8");
-        return m.reply("✅ Mode berhasil diubah menjadi *Public*");
+        return m.reply("Public mode on");
     }
 
     if (command === "self") {
@@ -715,7 +715,7 @@ case "self": {
         sock.public = global.mode_public
         let newData = data.replace(/global\.mode_public\s*=\s*(true|false)/, "global.mode_public = false");
         fs.writeFileSync(path, newData, "utf-8");
-        return m.reply("✅ Mode berhasil diubah menjadi *Self*");
+        return m.reply("Self mode on");
     }
 }
 break;
@@ -982,7 +982,7 @@ case "delpanel-response": {
             }
         }
         
-        await m.reply(`Barhasil Menghapus Sever Panel ✅\nNama Server: ${capital(serverName)}`);
+        await m.reply(`Barhasil Menghapus Sever Panel\nNama Server: ${capital(serverName)}`);
         
     } catch (error) {
         console.error("Error dalam proses delpanel:", error);
@@ -1111,7 +1111,7 @@ case "clearpanel": {
                 if (st === "offline") offServers.push(x) // hanya yang benar-benar offline, starting/stopping/running aman
             } catch { cekGagal++ }
         }
-        if (!offServers.length) return m.reply(`Tidak ada panel yang off. Semua aman ✅${cekGagal ? `\n(${cekGagal} server gagal dicek statusnya, nggak dihapus)` : ""}`)
+        if (!offServers.length) return m.reply(`Tidak ada panel yang off. Semua aman${cekGagal ? `\n(${cekGagal} server gagal dicek statusnya, nggak dihapus)` : ""}`)
 
         let srvOk = 0, srvFail = 0, userOk = 0, userFail = 0, adminSrv = 0
         const touchedUsers = new Set()
@@ -1131,7 +1131,7 @@ case "clearpanel": {
             if (r.ok) userOk++; else userFail++
             await new Promise(r => setTimeout(r, 300))
         }
-        await m.reply(`Selesai ✅\n\nPanel off terdeteksi: ${offServers.length}\nServer terhapus: ${srvOk}${srvFail ? ` (gagal ${srvFail})` : ""}\nUser terhapus: ${userOk}${userFail ? ` (gagal ${userFail})` : ""}\nPanel milik admin yang dihapus: ${adminSrv} (user admin tidak dihapus)`)
+        await m.reply(`Selesai\n\nPanel off terdeteksi: ${offServers.length}\nServer terhapus: ${srvOk}${srvFail ? ` (gagal ${srvFail})` : ""}\nUser terhapus: ${userOk}${userFail ? ` (gagal ${userFail})` : ""}\nPanel milik admin yang dihapus: ${adminSrv} (user admin tidak dihapus)`)
     } catch (err) {
         console.error("Error delpanel-off:", err)
         m.reply("Terjadi kesalahan saat memproses panel.")
@@ -1261,17 +1261,17 @@ case "cadmin": {
         const orang = nomor;
 
         if (nomor !== m.chat) {
-            await m.reply(`Berhasil membuat akun admin panel ✅\nData akun terkirim ke nomor ${nomor.split("@")[0]}`);
+            await m.reply(`Berhasil membuat akun admin panel\nData akun terkirim ke nomor ${nomor.split("@")[0]}`);
         }
 
         const teks = `
 *Berikut detail akun admin panel 📦*
 
-📡 Server ID: ${user.id}
-👤 Username: \`${user.username}\`
-🔐 Password: \`${password}\`
-🗓️ Tanggal Aktivasi: ${global.tanggal(Date.now())}
-*🌐* ${global.domain}
+Server ID: ${user.id}
+Username: \`${user.username}\`
+Password: \`${password}\`
+Tanggal Aktivasi: ${global.tanggal(Date.now())}
+*Domain* ${global.domain}
 
 *Rules pembelian admin panel:*  
 - Masa aktif 30 hari  
@@ -1371,7 +1371,7 @@ case "deladmin-response": {
             return m.reply(`Gagal menghapus akun admin!\n${JSON.stringify(errData.errors[0], null, 2)}`);
         }
 
-        await m.reply(`Berhasil Menghapus Admin Panel ✅\nNama User: ${global.capital(username)}`);
+        await m.reply(`Berhasil Menghapus Admin Panel\nNama User: ${global.capital(username)}`);
 
     } catch (err) {
         console.error(err);
@@ -1433,7 +1433,7 @@ case "addseller": {
         return m.reply(`Nomor ${input2} sudah menjadi reseller!`);
 
     global.db.settings.reseller.push(input);
-    m.reply(`Berhasil menambah reseller ✅`);
+    m.reply(`Berhasil menambah reseller`);
 }
 break;
 
@@ -1471,16 +1471,16 @@ case "delseller": {
         return m.reply(`Nomor ${input2} bukan reseller!`);
 
     list.splice(list.indexOf(input), 1);
-    m.reply(`Berhasil menghapus reseller ✅`);
+    m.reply(`Berhasil menghapus reseller`);
 }
 break;
 
 case "saluran": case "channel": case "ch": {
 const { sendNative, urlButton } = require("./source/Button.js")
 await sendNative(sock, m.chat, {
-    body: `📢 *Saluran ${global.namaCh}*\nGabung biar nggak ketinggalan info terbaru.`,
+    body: `*Saluran ${global.namaCh}*\nGabung biar nggak ketinggalan info terbaru.`,
     footer: global.namaBot,
-    buttons: [urlButton("📢 Join Saluran", global.linkChannel)]
+    buttons: [urlButton("Join Saluran", global.linkChannel)]
 }, { userJid: m.sender, quoted: m })
 }
 break
@@ -1497,14 +1497,14 @@ case "limit": case "ceklimit": case "cekprem": case "status": {
         ? new Date(u.premiumUntil + 7 * 3600000).toISOString().slice(0, 10) : null
     await m.reply(
 `╭─「 🧾 *STATUS KAMU* 」
-│ 👤 *User*   : @${m.sender.split("@")[0]}
-│ 🥠 *Status* : ${st.label}
-│ 📊 *Limit*  : ${Limit.limitText(st)}${exp ? `\n│ ⏳ *Premium sampai* : ${exp}` : ""}
+│ *User*   : @${m.sender.split("@")[0]}
+│ *Status* : ${st.label}
+│ *Limit*  : ${Limit.limitText(st)}${exp ? `\n│ ⏳ *Premium sampai* : ${exp}` : ""}
 ╰──────────────⦁
 
-🧙 Warlock = limit ${Limit.DAILY_LIMIT}/hari untuk fitur *play, tiktok, sticker, tourl*
-💎 Premium & 👑 Owner = unlimited
-⚔️ Limit habis? Cari koin lewat RPG, lalu beli limit: *.belilimit <jumlah>*`)
+Warlock = limit ${Limit.DAILY_LIMIT}/hari untuk fitur *play, tiktok, sticker, tourl*
+Premium & Owner = unlimited
+Limit habis? Cari koin lewat RPG, lalu beli limit: *.belilimit <jumlah>*`)
 }
 break
 
@@ -1518,7 +1518,7 @@ case "addprem": case "addpremium": {
     const lamaHari = m.quoted || m.mentionedJid[0] ? parseInt(parts.find((a) => /^\d{1,4}$/.test(a))) || 0 : parseInt(parts[1]) || 0
     const u = Limit.addPremium(target, lamaHari)
     await sock.sendMessage(m.chat, {
-        text: `✅ @${target.split("@")[0]} sekarang *Premium* 💎\n⏳ Durasi: ${lamaHari ? lamaHari + " hari" : "Permanen"}\n📊 Limit: Unlimited ♾️`,
+        text: `@${target.split("@")[0]} sekarang *Premium*\nDurasi: ${lamaHari ? lamaHari + " hari" : "Permanen"}\nLimit: Unlimited ♾️`,
         mentions: [target]
     }, { quoted: m })
 }
@@ -1531,7 +1531,7 @@ case "delprem": case "delpremium": {
         : text ? text.replace(/[^0-9]/g, "") + "@s.whatsapp.net" : null
     if (!target) return m.reply(`*Contoh penggunaan :*\n${cmd} 6285XXX`)
     if (!Limit.delPremium(target)) return m.reply(`@${target.split("@")[0]} bukan user premium.`)
-    await sock.sendMessage(m.chat, { text: `✅ Premium @${target.split("@")[0]} dicabut, kembali jadi *Warlock* 🧙`, mentions: [target] }, { quoted: m })
+    await sock.sendMessage(m.chat, { text: `Premium @${target.split("@")[0]} dicabut, kembali jadi *Warlock*`, mentions: [target] }, { quoted: m })
 }
 break
 
@@ -1540,7 +1540,7 @@ case "listprem": case "listpremium": {
     const list = Limit.listPremium()
     if (!list.length) return m.reply("Belum ada user premium.")
     const txt = list.map((x, i) => `${i + 1}. @${x.jid.split("@")[0]} — ${x.until ? new Date(x.until + 7 * 3600000).toISOString().slice(0, 10) : "Permanen"}`).join("\n")
-    await sock.sendMessage(m.chat, { text: `💎 *LIST PREMIUM* (${list.length})\n\n${txt}`, mentions: list.map((x) => x.jid) }, { quoted: m })
+    await sock.sendMessage(m.chat, { text: `*LIST PREMIUM* (${list.length})\n\n${txt}`, mentions: list.map((x) => x.jid) }, { quoted: m })
 }
 break
 
@@ -1567,7 +1567,7 @@ case "addowner": case "addown": {
         return m.reply(`Nomor ${jid} sudah menjadi ownerbot.`);
 
     global.db.settings.developer.push(input);
-    return m.reply(`Berhasil menambah owner ✅\n- ${jid}`);
+    return m.reply(`Berhasil menambah owner\n- ${jid}`);
 }
 break;
 
@@ -1586,14 +1586,14 @@ case "delowner": case "delown": {
 
     if (input.toLowerCase() === "all") {
         global.db.settings.developer = [];
-        return m.reply("Berhasil menghapus semua owner ✅");
+        return m.reply("Berhasil menghapus semua owner");
     }
 
     if (!global.db.settings.developer.includes(input)) 
         return m.reply("Nomor tidak ditemukan!");
 
     global.db.settings.developer = global.db.settings.developer.filter(i => i !== input);
-    return m.reply(`Berhasil menghapus owner ✅\n- ${input.split("@")[0]}`);
+    return m.reply(`Berhasil menghapus owner\n- ${input.split("@")[0]}`);
 }
 break;
 
@@ -1611,9 +1611,12 @@ case "listowner": case "listown": {
 break;
 
 case "resetdb": case "rstdb": {
-if (!isOwner) return m.reply(mess.owner)
-global.db = {}
-return m.reply("Berhasil mereset database ✅")
+    if (!isOwner) return m.reply(mess.owner);
+
+    return m.reply(
+        "Reset database penuh dinonaktifkan untuk mencegah data registrasi dan pengaturan terhapus tidak sengaja. " +
+        "Jika memang perlu reset, lakukan setelah membuat backup database/database.json."
+    );
 }
 break
         
@@ -1629,14 +1632,14 @@ case "play": {
 
         
         if (!result) {
-            return m.reply("❌ Gagal menemukan atau mengunduh audio. Server API mungkin sedang sibuk atau coba kata kunci lain.");
+            return m.reply("Gagal menemukan atau mengunduh audio. Server API mungkin sedang sibuk atau coba kata kunci lain.");
         }
 
         
         let caption = `ıllıllı *YOUTUBE DOWNLOAD* ıllıllı\n\n`;
-        caption += `🎵 *Judul* : ${result.title}\n`;
-        caption += `👤 *Channel* : ${result.channel || 'Tidak diketahui'}\n`;
-        caption += `🔗 *Source URL* : ${result.url || '-'}\n\n`;
+        caption += `*Judul* : ${result.title}\n`;
+        caption += `*Channel* : ${result.channel || 'Tidak diketahui'}\n`;
+        caption += `*Source URL* : ${result.url || '-'}\n\n`;
         caption += `_Audio sedang dikirim, mohon tunggu..._`;
 
 await sock.sendMessage(m.chat, { react: { text: '✅', key: m.key } })             
@@ -1655,7 +1658,7 @@ await sock.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
 
     } catch (e) {
         console.error("Error di case play:", e.message);
-        m.reply("❌ Terjadi kesalahan internal saat memproses musik.");
+        m.reply("Terjadi kesalahan internal saat memproses musik.");
     }
 }
 break;        
@@ -1680,11 +1683,11 @@ case "ttsearch":  {
     if (!input) {
         let warnMsg = `❖ ── ✦ ──『 ᴛɪᴋᴛᴏᴋ 』── ✦ ── ❖\n\n`;
         warnMsg += `*Format Penggunaan Salah!*\n\n`;
-        warnMsg += `📥 *Download Mode:*\n`;
+        warnMsg += `*Download Mode:*\n`;
         warnMsg += `=> ${cmd} link_tiktok\n\n`;
-        warnMsg += `🔍 *Search Mode:*\n`;
+        warnMsg += `*Search Mode:*\n`;
         warnMsg += `=> ${cmd} kata_kunci\n\n`;
-        warnMsg += `_© ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀɴᴅʀɪ sᴛᴏʀᴇ_`;
+        warnMsg += `_© ᴘᴏᴡᴇʀᴇᴅ ʙʏ ${Brand.hak.nama}_`;
         return m.reply(warnMsg);
     }
 
@@ -1700,25 +1703,25 @@ case "ttsearch":  {
       const json = await res.json();
       if (!json?.data) {
           await sock.sendMessage(m.chat, { react: { text: '❌', key: m.key } });
-          return m.reply("❌ Gagal mengambil data TikTok. Pastikan link valid dan tidak diprivate.");
+          return m.reply("Gagal mengambil data TikTok. Pastikan link valid dan tidak diprivate.");
       }
 
       await sock.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
 
       const d = json.data;
 
-      let info = `╭━━━〔 🎵 ᴛɪᴋᴛᴏᴋ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ 〕━━━╮\n`;
+      let info = `╭━━━〔 ᴛɪᴋᴛᴏᴋ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ 〕━━━╮\n`;
       info += `┃\n`;
-      info += `┃ 📌 *Judul:* ${d.title || "Tidak ada judul"}\n`;
-      info += `┃ 👤 *Author:* ${d.author?.nickname || d.author?.unique_id || "Unknown"}\n`;
-      info += `┃ 🌍 *Region:* ${d.region || "-"}\n`;
-      info += `┃ ⏱️ *Durasi:* ${formatDuration(d.duration)}\n`;
-      info += `┃ 👁️ *Views:* ${formatNumber(d.play_count)}\n`;
-      info += `┃ 💬 *Komen:* ${formatNumber(d.comment_count)}\n`;
-      info += `┃ 🔁 *Share:* ${formatNumber(d.share_count)}\n`;
+      info += `┃ *Judul:* ${d.title || "Tidak ada judul"}\n`;
+      info += `┃ *Author:* ${d.author?.nickname || d.author?.unique_id || "Unknown"}\n`;
+      info += `┃ *Region:* ${d.region || "-"}\n`;
+      info += `┃ *Durasi:* ${formatDuration(d.duration)}\n`;
+      info += `┃ *Views:* ${formatNumber(d.play_count)}\n`;
+      info += `┃ *Komen:* ${formatNumber(d.comment_count)}\n`;
+      info += `┃ *Share:* ${formatNumber(d.share_count)}\n`;
       info += `┃\n`;
       info += `╰━━━━━━━━━━━━━━━━━━━━━\n\n`;
-      info += `_© ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀɴᴅʀɪ sᴛᴏʀᴇ_`;
+      info += `_© ᴘᴏᴡᴇʀᴇᴅ ʙʏ ${Brand.hak.nama}_`;
 
       // ===== foto slide =====
       if (d.images?.length) {
@@ -1761,23 +1764,23 @@ case "ttsearch":  {
       
       if (!v) {
           await sock.sendMessage(m.chat, { react: { text: '❌', key: m.key } });
-          return m.reply("❌ Video tidak ditemukan. Coba gunakan kata kunci lain.");
+          return m.reply("Video tidak ditemukan. Coba gunakan kata kunci lain.");
       }
 
       await sock.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
 
-      let caption = `╭━━━〔 🔍 ᴛɪᴋᴛᴏᴋ sᴇᴀʀᴄʜ 〕━━━╮\n`;
+      let caption = `╭━━━〔 ᴛɪᴋᴛᴏᴋ sᴇᴀʀᴄʜ 〕━━━╮\n`;
       caption += `┃\n`;
-      caption += `┃ 📌 *Judul:* ${v.title || "Tidak ada judul"}\n`;
-      caption += `┃ 👤 *Author:* ${v.author?.nickname || v.author?.unique_id || "Unknown"}\n`;
-      caption += `┃ 🌍 *Region:* ${v.region || "-"}\n`;
-      caption += `┃ ⏱️ *Durasi:* ${formatDuration(v.duration)}\n`;
-      caption += `┃ 👁️ *Views:* ${formatNumber(v.play_count)}\n`;
-      caption += `┃ 💬 *Komen:* ${formatNumber(v.comment_count)}\n`;
-      caption += `┃ 🔁 *Share:* ${formatNumber(v.share_count)}\n`;
+      caption += `┃ *Judul:* ${v.title || "Tidak ada judul"}\n`;
+      caption += `┃ *Author:* ${v.author?.nickname || v.author?.unique_id || "Unknown"}\n`;
+      caption += `┃ *Region:* ${v.region || "-"}\n`;
+      caption += `┃ *Durasi:* ${formatDuration(v.duration)}\n`;
+      caption += `┃ *Views:* ${formatNumber(v.play_count)}\n`;
+      caption += `┃ *Komen:* ${formatNumber(v.comment_count)}\n`;
+      caption += `┃ *Share:* ${formatNumber(v.share_count)}\n`;
       caption += `┃\n`;
       caption += `╰━━━━━━━━━━━━━━━━━━━━━\n\n`;
-      caption += `_© ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀɴᴅʀɪ sᴛᴏʀᴇ_`;
+      caption += `_© ᴘᴏᴡᴇʀᴇᴅ ʙʏ ${Brand.hak.nama}_`;
 
       // Handle foto slide pada fitur Search
       if (v.images?.length) {
@@ -1813,7 +1816,7 @@ case "ttsearch":  {
   } catch (e) {
     console.error(e);
     await sock.sendMessage(m.chat, { react: { text: '❌', key: m.key } });
-    m.reply("❌ Terjadi kesalahan saat memproses data TikTok.");
+    m.reply("Terjadi kesalahan saat memproses data TikTok.");
   }
 }
 break;        
